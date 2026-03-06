@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberAi Dashboard</title>
+    <style>
+      /* Hybrid dark + neon cyan theme */
+      :root {
+        --bg: #02070a;
+        --bg-panel: #050d13;
+        --text: #e6faff;
+        --text-dim: #8bbcc7;
+        --border: #0a1f26;
+        --accent: #00eaff;
+        --accent-dark: #009bb3;
+        --accent-glow: rgba(0, 234, 255, 0.45);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+
+      /* Dashboard layout */
+      .dashboard-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .dashboard-header {
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+        padding: 0.75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 12px rgba(0, 234, 255, 0.06);
+      }
+
+      .dashboard-header .logo {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--accent);
+        text-shadow: 0 0 8px var(--accent-glow);
+        text-decoration: none;
+      }
+
+      .dashboard-header nav {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .dashboard-header nav a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.9rem;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .dashboard-header nav a:hover,
+      .dashboard-header nav a.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        text-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      /* Main dashboard grid */
+      .dashboard-body {
+        display: flex;
+        flex: 1;
+      }
+
+      .sidebar {
+        width: 220px;
+        background: var(--bg-panel);
+        border-right: 1px solid var(--border);
+        padding: 1.5rem 0;
+        display: none;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 1.25rem;
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.9rem;
+        border-left: 3px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        color: var(--accent);
+        background: rgba(0, 234, 255, 0.06);
+        border-left-color: var(--accent);
+      }
+
+      .main-area {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+      }
+
+      /* Dashboard cards */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+      }
+
+      .stat-card:hover {
+        border-color: var(--accent-dark);
+        box-shadow: 0 0 12px var(--accent-glow);
+      }
+
+      .stat-card .label {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--accent);
+        text-shadow: 0 0 8px var(--accent-glow);
+      }
+
+      .section-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* Agent list */
+      .agent-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .agent-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: border-color 0.2s;
+      }
+
+      .agent-row:hover {
+        border-color: var(--accent-dark);
+      }
+
+      .agent-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
+        flex-shrink: 0;
+      }
+
+      .agent-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .agent-status {
+        margin-left: auto;
+        font-size: 0.75rem;
+        color: var(--text-dim);
+      }
+
+      @media (min-width: 769px) {
+        .sidebar {
+          display: flex;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <header class="dashboard-header">
+        <a href="/" class="logo">🔒 CyberAi</a>
+        <nav>
+          <a href="/dashboard" class="active">Dashboard</a>
+          <a href="/app">App</a>
+          <a href="/operators">Console</a>
+          <a href="/audit">Audit</a>
+          <a href="/docs">Docs</a>
+        </nav>
+      </header>
+      <div class="dashboard-body">
+        <aside class="sidebar">
+          <a href="/dashboard" class="active" aria-label="Overview">📊 Overview</a>
+          <a href="/dashboard/agents" aria-label="Agents">🤖 Agents</a>
+          <a href="/dashboard/contracts" aria-label="Contracts">📜 Contracts</a>
+          <a href="/dashboard/workflows" aria-label="Workflows">⚙️ Workflows</a>
+          <a href="/dashboard/logs" aria-label="Logs">📋 Logs</a>
+          <a href="/dashboard/settings" aria-label="Settings">⚙️ Settings</a>
+        </aside>
+        <main class="main-area">
+          <div class="cards-grid">
+            <div class="stat-card">
+              <div class="label">Active Agents</div>
+              <div class="value">12</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Contracts Scanned</div>
+              <div class="value">248</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Vulnerabilities Found</div>
+              <div class="value">3</div>
+            </div>
+            <div class="stat-card">
+              <div class="label">Workflows Running</div>
+              <div class="value">7</div>
+            </div>
+          </div>
+          <div class="section-title">Active Agents</div>
+          <div class="agent-list">
+            <div class="agent-row">
+              <div class="agent-dot"></div>
+              <span class="agent-name">SecurityScanner</span>
+              <span class="agent-status">running</span>
+            </div>
+            <div class="agent-row">
+              <div class="agent-dot"></div>
+              <span class="agent-name">ContractAnalyzer</span>
+              <span class="agent-status">running</span>
+            </div>
+            <div class="agent-row">
+              <div class="agent-dot" style="background: var(--text-dim); box-shadow: none;"></div>
+              <span class="agent-name">AutomationAgent</span>
+              <span class="agent-status">idle</span>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

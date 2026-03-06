@@ -3,20 +3,29 @@
  * CyberAi Network Enhanced UI Configuration
  * 
  * Features:
- * - Neon glow effects for interactive elements
+ * - Hybrid dark + neon cyan glow effects
  * - Smooth transitions and animations
  * - Modern glassmorphism design
  * - Cyberpunk-inspired color palette
  */
 
 :root {
-  /* Neo Glow FX Color Palette */
-  --neo-primary: #00d9ff;
-  --neo-secondary: #ff006e;
-  --neo-accent: #8338ec;
+  /* Hybrid dark + cyan palette */
+  --bg: #02070a;
+  --bg-panel: #050d13;
+  --text: #e6faff;
+  --text-dim: #8bbcc7;
+  --border: #0a1f26;
+  --accent: #00eaff;
+  --accent-dark: #009bb3;
+  --accent-glow: rgba(0, 234, 255, 0.45);
+
+  /* Neo Glow FX aliases */
+  --neo-primary: var(--accent);
+  --neo-accent: var(--accent-dark);
   --neo-success: #06ffa5;
   --neo-warning: #ffbe0b;
-  --neo-danger: #ff006e;
+  --neo-danger: #ff4d6a;
 
   /* Glow intensities */
   --glow-sm: 0 0 5px;
@@ -24,22 +33,14 @@
   --glow-lg: 0 0 20px;
   --glow-xl: 0 0 30px;
 
-  /* Background colors with transparency */
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  /* Glass surfaces */
+  --glass-bg: rgba(0, 234, 255, 0.04);
+  --glass-border: rgba(0, 234, 255, 0.12);
 
   /* Animation timings */
   --transition-fast: 0.2s;
   --transition-medium: 0.3s;
   --transition-slow: 0.5s;
-}
-
-/* Dark mode optimizations */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --glass-bg: rgba(0, 0, 0, 0.3);
-    --glass-border: rgba(255, 255, 255, 0.15);
-  }
 }
 
 /* Glow effect utility classes */
@@ -97,7 +98,7 @@
 }
 
 .neo-glass-strong {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 234, 255, 0.07);
   backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 12px;

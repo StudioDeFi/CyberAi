@@ -1,0 +1,35 @@
+/**
+ * CyberAi Hybrid Digital Cyan Theme
+ * Dark base + neon cyan accent palette
+ */
+
+:root {
+  /* Core palette */
+  --bg: #02070a;
+  --bg-panel: #050d13;
+  --text: #e6faff;
+  --text-dim: #8bbcc7;
+  --border: #0a1f26;
+  --accent: #00eaff;
+  --accent-dark: #009bb3;
+  --accent-glow: rgba(0, 234, 255, 0.45);
+
+  /* Alias tokens used across the site */
+  --neo-primary: var(--accent);
+  --neo-accent: var(--accent-dark);
+
+  /* Glow intensity helpers */
+  --glow-sm: 0 0 5px;
+  --glow-md: 0 0 10px;
+  --glow-lg: 0 0 20px;
+  --glow-xl: 0 0 30px;
+
+  /* Glass surfaces */
+  --glass-bg: rgba(0, 234, 255, 0.04);
+  --glass-border: rgba(0, 234, 255, 0.12);
+
+  /* Animation timings */
+  --transition-fast: 0.2s;
+  --transition-medium: 0.3s;
+  --transition-slow: 0.5s;
+}
