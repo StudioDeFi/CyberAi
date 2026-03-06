@@ -813,14 +813,6 @@
         guest:    new Set([]),
       };
 
-      const FEATURE_ACTIONS = {
-        'view:agents':        'view:agents',
-        'manage:workflows':   'manage:workflows',
-        'view:dashboards':    'view:dashboards',
-        'view:logs':          'view:logs',
-        'view:chat':          'view:chat',
-      };
-
       const app = document.getElementById('app');
       const currentRole = app.dataset.role || 'guest';
       const perms = ROLE_PERMISSIONS[currentRole] || ROLE_PERMISSIONS.guest;
