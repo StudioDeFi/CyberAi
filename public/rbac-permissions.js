@@ -10,7 +10,6 @@
  * HTML consumers: app/layout.html, dashboard/layout.html
  */
 
-/* global window */
 window.CYBER_RBAC = {
   rolePermissions: {
     admin:    new Set(['view:agents','view:repos','view:logs','view:dashboards','view:chat','view:docs','manage:deploy','manage:workflows','manage:contracts','manage:terminal','manage:agent-tools','admin:all']),
