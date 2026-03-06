@@ -804,14 +804,11 @@
       </div><!-- /app-body -->
     </div><!-- /app-shell -->
 
+    <script src="../public/rbac-permissions.js"></script>
     <script>
-      // ── Role permissions (mirrors src/security/permissions.ts) ──
-      const ROLE_PERMISSIONS = {
-        admin:    new Set(['view:agents','view:repos','view:logs','view:dashboards','view:chat','view:docs','manage:deploy','manage:workflows','manage:contracts','manage:terminal','manage:agent-tools','admin:all']),
-        operator: new Set(['manage:workflows','manage:contracts','manage:terminal','manage:agent-tools','view:chat','view:docs']),
-        user:     new Set(['view:chat','view:docs']),
-        guest:    new Set([]),
-      };
+      // ── Role permissions loaded from public/rbac-permissions.js ──
+      // Canonical data: src/security/role-permissions.json
+      const ROLE_PERMISSIONS = window.CYBER_RBAC.rolePermissions;
 
       const app = document.getElementById('app');
       const currentRole = app.dataset.role || 'guest';
