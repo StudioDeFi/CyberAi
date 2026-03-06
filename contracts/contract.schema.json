@@ -148,6 +148,26 @@
           }
         }
       }
+    },
+    "ui": {
+      "type": "object",
+      "description": "UI presentation metadata for agent badges, avatars, and selectors",
+      "properties": {
+        "color": {
+          "type": "string",
+          "description": "Theme color for the agent. Use 'cyan' for the hybrid dark+cyan theme.",
+          "enum": ["cyan"]
+        },
+        "badge": {
+          "type": "string",
+          "description": "Short 2-letter badge label shown in avatars",
+          "maxLength": 4
+        },
+        "icon": {
+          "type": "string",
+          "description": "Emoji icon representing the agent"
+        }
+      }
     }
   }
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CyberAi App</title>
     <style>
-      /* Hybrid dark + neon cyan theme */
+      /* ── Hybrid dark + neon cyan theme ── */
       :root {
         --bg: #02070a;
         --bg-panel: #050d13;
@@ -17,147 +17,352 @@
         --accent-glow: rgba(0, 234, 255, 0.45);
       }
 
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-      html,
-      body {
+      html, body {
         height: 100%;
         background: var(--bg);
         color: var(--text);
         font-family: system-ui, -apple-system, sans-serif;
-      }
-
-      .app-shell {
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      /* Activity Bar */
-      .activity-bar {
-        display: none;
-        width: 56px;
-        background: var(--bg-panel);
-        border-right: 1px solid var(--border);
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-        gap: 0.5rem;
-      }
-
-      .activity-bar a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 8px;
-        color: var(--text-dim);
-        text-decoration: none;
-        font-size: 1.2rem;
-        transition: all 0.2s ease;
-      }
-
-      .activity-bar a:hover,
-      .activity-bar a.active {
-        color: var(--accent);
-        background: rgba(0, 234, 255, 0.08);
-        box-shadow: 0 0 8px var(--accent-glow);
-      }
-
-      /* IDE Layout */
-      .ide-layout {
-        display: flex;
-        flex: 1;
         overflow: hidden;
       }
 
-      /* Main content */
-      .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: auto;
-        padding: 2rem;
-      }
+      /* ── Shell ── */
+      .app-shell { display: flex; flex-direction: column; height: 100vh; }
 
-      /* Header */
+      /* ── Header ── */
       .app-header {
         background: var(--bg-panel);
         border-bottom: 1px solid var(--border);
-        padding: 0.75rem 1.5rem;
+        padding: 0.6rem 1rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 1rem;
+        gap: 0.75rem;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px rgba(0, 234, 255, 0.06);
       }
 
       .app-header .logo {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 800;
         color: var(--accent);
         text-shadow: 0 0 8px var(--accent-glow);
         text-decoration: none;
+        white-space: nowrap;
       }
 
-      /* Mobile nav */
-      .mobile-nav {
+      /* ── Role badge ── */
+      .role-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      /* ── Header nav (desktop) ── */
+      .header-nav {
+        display: none;
+        align-items: center;
+        gap: 1.25rem;
+      }
+
+      .header-nav a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: color 0.2s;
+        border-bottom: 2px solid transparent;
+        padding-bottom: 2px;
+      }
+
+      .header-nav a:hover, .header-nav a.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        text-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      /* ── Mobile menu button ── */
+      .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.4rem;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: all 0.25s;
+      }
+
+      .mobile-menu-btn.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+      .mobile-menu-btn.open span:nth-child(2) { opacity: 0; }
+      .mobile-menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+      /* ── Mobile drawer ── */
+      .mobile-drawer {
+        position: fixed;
+        top: 0; right: 0; bottom: 0;
+        width: 240px;
+        background: var(--bg-panel);
+        border-left: 1px solid var(--border);
+        box-shadow: -4px 0 20px rgba(0, 234, 255, 0.12);
+        z-index: 200;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        padding: 4rem 0 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .mobile-drawer.open { transform: translateX(0); }
+
+      .mobile-drawer a {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-      }
-
-      .mobile-nav a {
+        padding: 0.9rem 1.5rem;
         color: var(--text-dim);
         text-decoration: none;
         font-size: 0.9rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+        min-height: 48px;
+        transition: all 0.2s;
       }
 
-      .mobile-nav a:hover,
-      .mobile-nav a.active {
+      .mobile-drawer a:hover, .mobile-drawer a.active {
         color: var(--accent);
-        background: rgba(0, 234, 255, 0.08);
+        background: rgba(0, 234, 255, 0.06);
+        border-left-color: var(--accent);
       }
 
-      /* Chat panel */
-      .chat-panel {
+      .drawer-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 199;
+      }
+
+      .drawer-overlay.open { display: block; }
+
+      /* ── Body ── */
+      .app-body { display: flex; flex: 1; overflow: hidden; }
+
+      /* ── Activity Bar (desktop sidebar) ── */
+      .activity-bar {
+        display: none;
+        width: 52px;
         background: var(--bg-panel);
-        border: 1px solid var(--border);
+        border-right: 1px solid var(--border);
+        flex-direction: column;
+        align-items: center;
+        padding: 0.75rem 0;
+        gap: 0.25rem;
+        flex-shrink: 0;
+      }
+
+      .activity-bar button,
+      .activity-bar a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
         border-radius: 8px;
+        color: var(--text-dim);
+        background: none;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 1.1rem;
+        transition: all 0.2s;
+        position: relative;
+      }
+
+      .activity-bar button:hover,
+      .activity-bar button.active,
+      .activity-bar a:hover,
+      .activity-bar a.active {
+        color: var(--accent);
+        background: rgba(0, 234, 255, 0.1);
+        box-shadow: 0 0 8px var(--accent-glow);
+      }
+
+      .activity-bar .ab-divider {
+        width: 28px;
+        height: 1px;
+        background: var(--border);
+        margin: 0.25rem 0;
+      }
+
+      /* ── Main content ── */
+      .main-pane {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        height: 500px;
-        max-width: 720px;
-        margin: 0 auto;
-        width: 100%;
+        overflow: hidden;
       }
 
+      /* ── Tab bar ── */
+      .tab-bar {
+        display: flex;
+        align-items: center;
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+        padding: 0 0.5rem;
+        gap: 0;
+        flex-shrink: 0;
+        overflow-x: auto;
+      }
+
+      .tab {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        min-height: 40px;
+      }
+
+      .tab:hover { color: var(--text); }
+
+      .tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        text-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      /* ── Panels ── */
+      .panel-container {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .panel {
+        display: none;
+        height: 100%;
+        overflow-y: auto;
+        padding: 1.25rem;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .panel.active { display: flex; }
+
+      /* ── Chat Panel ── */
+      .chat-panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      /* Agent selector bar */
+      .agent-selector-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .agent-selector-bar label {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        white-space: nowrap;
+      }
+
+      .agent-select {
+        background: var(--bg);
+        color: var(--accent);
+        border: 1px solid var(--accent-dark);
+        border-radius: 6px;
+        padding: 0.3rem 0.6rem;
+        font-size: 0.82rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .agent-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      .agent-select option { background: var(--bg-panel); }
+
+      .chat-mode-toggle {
+        margin-left: auto;
+        display: flex;
+        gap: 0.4rem;
+      }
+
+      .mode-btn {
+        font-size: 0.72rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text-dim);
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .mode-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      /* Chat messages */
       .chat-messages {
         flex: 1;
         overflow-y: auto;
-        padding: 1rem;
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
+        padding: 0.5rem 0;
+      }
+
+      .chat-bubble {
+        max-width: min(80%, 560px);
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        line-height: 1.5;
+        font-size: 0.9rem;
+        word-break: break-word;
       }
 
       .chat-bubble-user {
         align-self: flex-end;
         border: 1px solid var(--accent);
-        background: var(--bg-panel);
+        background: rgba(0, 234, 255, 0.06);
         border-radius: 12px 12px 2px 12px;
-        padding: 0.75rem 1rem;
-        color: var(--text);
-        max-width: 80%;
       }
 
       .chat-bubble-ai {
@@ -165,121 +370,641 @@
         border: 1px solid var(--accent-dark);
         background: var(--bg-panel);
         border-radius: 12px 12px 12px 2px;
-        padding: 0.75rem 1rem;
-        color: var(--text);
-        max-width: 80%;
-        box-shadow: 0 0 12px var(--accent-glow);
+        box-shadow: 0 0 10px var(--accent-glow);
       }
 
-      .chat-input-row {
-        padding: 0.75rem;
-        border-top: 1px solid var(--border);
+      /* Streaming cursor */
+      .typing-cursor::after {
+        content: '▍';
+        animation: blink 0.9s step-end infinite;
+        color: var(--accent);
+        margin-left: 2px;
+      }
+
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+      /* Chat input */
+      .chat-input-area {
         display: flex;
         gap: 0.5rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border);
+        align-items: flex-end;
       }
 
-      .chat-input-row input {
+      .chat-textarea {
         flex: 1;
+        min-height: 42px;
+        max-height: 120px;
+        resize: none;
         background: var(--bg);
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+        padding: 0.55rem 0.75rem;
         color: var(--text);
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        font-family: inherit;
+        line-height: 1.5;
         outline: none;
         transition: border-color 0.2s, box-shadow 0.2s;
       }
 
-      .chat-input-row input:focus {
+      .chat-textarea:focus {
         border-color: var(--accent);
         box-shadow: 0 0 8px var(--accent-glow);
       }
 
-      .chat-input-row button {
+      .chat-send-btn {
+        background: var(--accent);
+        color: var(--bg);
+        border: none;
+        border-radius: 8px;
+        padding: 0.55rem 1.1rem;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s;
+        min-height: 42px;
+      }
+
+      .chat-send-btn:hover:not(:disabled) {
+        background: var(--accent-dark);
+        box-shadow: 0 0 10px var(--accent-glow);
+      }
+
+      .chat-send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* ── Workflow Panel ── */
+      .workflow-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+      }
+
+      .workflow-toolbar h2 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .btn-run {
         background: var(--accent);
         color: var(--bg);
         border: none;
         border-radius: 6px;
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 0.9rem;
         font-weight: 700;
+        font-size: 0.82rem;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.2s;
+        margin-left: auto;
       }
 
-      .chat-input-row button:hover {
-        background: var(--accent-dark);
-        box-shadow: 0 0 8px var(--accent-glow);
+      .btn-run:hover { background: var(--accent-dark); box-shadow: 0 0 8px var(--accent-glow); }
+
+      .workflow-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
       }
 
+      .workflow-row {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: border-color 0.2s;
+        cursor: pointer;
+      }
+
+      .workflow-row:hover { border-color: var(--accent-dark); }
+
+      .workflow-row.running { border-color: var(--accent); box-shadow: 0 0 8px var(--accent-glow); }
+
+      .wf-status {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background: var(--text-dim);
+        flex-shrink: 0;
+      }
+
+      .wf-status.running {
+        background: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      .wf-status.success { background: #06ffa5; }
+      .wf-status.failed { background: #ff4d6a; }
+
+      @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+      .wf-name { font-size: 0.88rem; font-weight: 600; }
+
+      .wf-agent {
+        font-size: 0.75rem;
+        color: var(--accent-dark);
+        border: 1px solid var(--accent-dark);
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+      }
+
+      .wf-time { margin-left: auto; font-size: 0.75rem; color: var(--text-dim); }
+
+      /* Workflow logs */
+      .workflow-logs {
+        margin-top: 1rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        max-height: 220px;
+        overflow-y: auto;
+        line-height: 1.7;
+      }
+
+      .log-line.success { color: #06ffa5; }
+      .log-line.error { color: #ff4d6a; }
+      .log-line.accent { color: var(--accent); }
+
+      /* ── Agents Panel ── */
+      .agents-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 0.75rem;
+      }
+
+      .agent-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: all 0.2s;
+        cursor: pointer;
+      }
+
+      .agent-card:hover {
+        border-color: var(--accent-dark);
+        box-shadow: 0 0 10px var(--accent-glow);
+      }
+
+      .agent-avatar {
+        width: 40px; height: 40px;
+        border-radius: 10px;
+        background: rgba(0, 234, 255, 0.1);
+        border: 1px solid var(--accent-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+      }
+
+      .agent-name { font-size: 0.88rem; font-weight: 700; color: var(--text); }
+
+      .agent-tag {
+        font-size: 0.72rem;
+        padding: 0.1rem 0.45rem;
+        border-radius: 4px;
+        border: 1px solid var(--accent-dark);
+        color: var(--accent-dark);
+        align-self: flex-start;
+      }
+
+      .agent-desc { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+
+      /* ── RBAC guard banner ── */
+      .rbac-banner {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 77, 106, 0.1);
+        border: 1px solid rgba(255, 77, 106, 0.4);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        color: #ff4d6a;
+        margin-bottom: 0.75rem;
+      }
+
+      .rbac-banner.visible { display: flex; }
+      .rbac-banner a { color: var(--accent); }
+
+      /* ── Desktop breakpoint ── */
       @media (min-width: 769px) {
-        .activity-bar {
-          display: flex;
-        }
+        .mobile-menu-btn { display: none; }
+        .header-nav { display: flex; }
+        .activity-bar { display: flex; }
+      }
+
+      /* ── Mobile chat height ── */
+      @media (max-width: 768px) {
+        .chat-bubble { max-width: 90%; }
+        body { overflow: auto; }
+        html, body { height: auto; }
+        .app-shell { height: auto; min-height: 100vh; }
+        .app-body { overflow: auto; }
+        .panel-container { overflow: visible; }
+        .panel { height: auto; }
+        .chat-panel { height: calc(100svh - 160px); }
       }
     </style>
   </head>
   <body>
-    <div class="app-shell">
+    <!--
+      data-role: simulates the current session role.
+      In a real server-side implementation this would be set by the auth layer.
+      Values: 'admin' | 'operator' | 'user' | 'guest'
+    -->
+    <div class="app-shell" id="app" data-role="user">
+
+      <!-- Header -->
       <header class="app-header">
         <a href="/" class="logo">🔒 CyberAi</a>
-        <nav class="mobile-nav">
+        <nav class="header-nav">
           <a href="/app" class="active">App</a>
-          <a href="/dashboard">Dashboard</a>
+          <a href="/dashboard" data-requires="view:dashboards">Dashboard</a>
+          <a href="/operators" data-requires="manage:workflows">Console</a>
           <a href="/docs">Docs</a>
         </nav>
+        <span class="role-badge" id="role-label">user</span>
+        <button class="mobile-menu-btn" id="menu-btn" aria-label="Toggle navigation">
+          <span></span><span></span><span></span>
+        </button>
       </header>
-      <div class="ide-layout">
+
+      <!-- Mobile drawer -->
+      <div class="drawer-overlay" id="drawer-overlay"></div>
+      <nav class="mobile-drawer" id="mobile-drawer">
+        <a href="/app" class="active">💬 Chat</a>
+        <a href="/dashboard" data-requires="view:dashboards">📊 Dashboard</a>
+        <a href="/operators" data-requires="manage:workflows">⚙️ Console</a>
+        <a href="/audit" data-requires="view:logs">🔍 Audit</a>
+        <a href="/docs">📖 Docs</a>
+      </nav>
+
+      <div class="app-body">
+        <!-- Activity bar -->
         <aside class="activity-bar">
-          <a href="/app" class="active" aria-label="Chat">💬</a>
-          <a href="/dashboard" aria-label="Dashboard">📊</a>
+          <button class="active" data-tab="chat" aria-label="Chat">💬</button>
+          <button data-tab="workflows" data-requires="manage:workflows" aria-label="Workflows">⚙️</button>
+          <button data-tab="agents" data-requires="view:agents" aria-label="Agents">🤖</button>
+          <div class="ab-divider"></div>
+          <a href="/dashboard" data-requires="view:dashboards" aria-label="Dashboard">📊</a>
           <a href="/docs" aria-label="Docs">📖</a>
-          <a href="/operators" aria-label="Console">⚙️</a>
-          <a href="/audit" aria-label="Audit">🔍</a>
         </aside>
-        <main class="main-content">
-          <div class="chat-panel">
-            <div class="chat-messages" id="chat-messages">
-              <div class="chat-bubble-ai">
-                Hello! I'm CyberAi. How can I help you today?
+
+        <!-- Main pane -->
+        <main class="main-pane">
+          <!-- Tab bar -->
+          <div class="tab-bar">
+            <button class="tab active" data-tab="chat">💬 Chat</button>
+            <button class="tab" data-tab="workflows" data-requires="manage:workflows">⚙️ Workflows</button>
+            <button class="tab" data-tab="agents" data-requires="view:agents">🤖 Agents</button>
+          </div>
+
+          <div class="panel-container">
+
+            <!-- ── Chat Panel ── -->
+            <div class="panel active" id="panel-chat">
+              <div class="chat-panel">
+                <div class="agent-selector-bar">
+                  <label for="agent-select">Agent:</label>
+                  <select class="agent-select" id="agent-select">
+                    <option value="cyberai" data-icon="🔒">🔒 CyberAi (default)</option>
+                    <option value="copilot-core" data-icon="🧠">🧠 Copilot Core</option>
+                    <option value="example-agent" data-icon="🤖">🤖 Example Agent</option>
+                    <option value="terminal-mobile" data-icon="📱">📱 Terminal Mobile</option>
+                  </select>
+                  <div class="chat-mode-toggle">
+                    <button class="mode-btn active" data-mode="public">Public</button>
+                    <button class="mode-btn" data-mode="auth" data-requires="view:chat">Auth</button>
+                  </div>
+                </div>
+
+                <div class="rbac-banner" id="chat-rbac-banner">
+                  🔒 Authenticated chat requires a valid session.
+                  <a href="/login">Sign in</a>
+                </div>
+
+                <div class="chat-messages" id="chat-messages" role="log" aria-live="polite">
+                  <div class="chat-bubble chat-bubble-ai">
+                    Hello! I'm CyberAi. How can I help you today?
+                  </div>
+                </div>
+
+                <div class="chat-input-area">
+                  <textarea
+                    class="chat-textarea"
+                    id="chat-input"
+                    placeholder="Ask CyberAi…"
+                    rows="1"
+                    autocomplete="off"
+                  ></textarea>
+                  <button class="chat-send-btn" id="chat-send" aria-label="Send message">Send</button>
+                </div>
               </div>
             </div>
-            <div class="chat-input-row">
-              <input
-                type="text"
-                id="chat-input"
-                placeholder="Ask CyberAi..."
-                autocomplete="off"
-              />
-              <button id="chat-send">Send</button>
-            </div>
-          </div>
-        </main>
-      </div>
-    </div>
-    <script>
-      const input = document.getElementById('chat-input');
-      const send = document.getElementById('chat-send');
-      const messages = document.getElementById('chat-messages');
 
-      function addMessage(text, role) {
-        const el = document.createElement('div');
-        el.className = role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai';
-        el.textContent = text;
-        messages.appendChild(el);
-        messages.scrollTop = messages.scrollHeight;
+            <!-- ── Workflows Panel ── -->
+            <div class="panel" id="panel-workflows">
+              <div class="rbac-banner" id="wf-rbac-banner">
+                🔒 Workflow management requires Operator or Admin role.
+                <a href="/login">Sign in</a>
+              </div>
+
+              <div class="workflow-toolbar">
+                <h2>Workflows</h2>
+                <button class="btn-run" id="run-workflow-btn" aria-label="Run selected workflow">▶ Run</button>
+              </div>
+
+              <div class="workflow-list" id="workflow-list">
+                <div class="workflow-row running" data-id="security-audit">
+                  <div class="wf-status running"></div>
+                  <span class="wf-name">security-audit</span>
+                  <span class="wf-agent">🔒 CyberAi</span>
+                  <span class="wf-time">running…</span>
+                </div>
+                <div class="workflow-row" data-id="contract-validation">
+                  <div class="wf-status success"></div>
+                  <span class="wf-name">contract-validation</span>
+                  <span class="wf-agent">🤖 Example Agent</span>
+                  <span class="wf-time">2 min ago</span>
+                </div>
+                <div class="workflow-row" data-id="mobile-bootstrap">
+                  <div class="wf-status"></div>
+                  <span class="wf-name">mobile-bootstrap</span>
+                  <span class="wf-agent">📱 Terminal Mobile</span>
+                  <span class="wf-time">idle</span>
+                </div>
+              </div>
+
+              <div class="workflow-logs" id="workflow-logs" aria-label="Workflow log output">
+                <div class="log-line accent">▶ security-audit started at 00:51:03</div>
+                <div class="log-line">  Scanning contracts/agents/*.json…</div>
+                <div class="log-line success">  ✓ example-agent.json — OK</div>
+                <div class="log-line success">  ✓ copilot-core.json — OK</div>
+                <div class="log-line success">  ✓ terminal-mobile.json — OK</div>
+                <div class="log-line">  Checking RBAC permissions…</div>
+                <div class="log-line accent">  ▍</div>
+              </div>
+            </div>
+
+            <!-- ── Agents Panel ── -->
+            <div class="panel" id="panel-agents">
+              <div class="rbac-banner" id="agents-rbac-banner">
+                🔒 Agent management requires Admin role.
+                <a href="/login">Sign in</a>
+              </div>
+
+              <div class="agents-grid" id="agents-grid">
+                <div class="agent-card">
+                  <div class="agent-avatar">🔒</div>
+                  <span class="agent-name">CyberAi</span>
+                  <span class="agent-tag">security</span>
+                  <span class="agent-desc">Core AI security agent for smart contract analysis.</span>
+                </div>
+                <div class="agent-card">
+                  <div class="agent-avatar">🧠</div>
+                  <span class="agent-name">Copilot Core</span>
+                  <span class="agent-tag">analysis</span>
+                  <span class="agent-desc">Code generation, analysis, and repository maintenance.</span>
+                </div>
+                <div class="agent-card">
+                  <div class="agent-avatar">🤖</div>
+                  <span class="agent-name">Example Agent</span>
+                  <span class="agent-tag">template</span>
+                  <span class="agent-desc">Template agent for the CyberAi ecosystem.</span>
+                </div>
+                <div class="agent-card">
+                  <div class="agent-avatar">📱</div>
+                  <span class="agent-name">Terminal Mobile</span>
+                  <span class="agent-tag">mobile</span>
+                  <span class="agent-desc">iOS/Terminal-based repository operations.</span>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /panel-container -->
+        </main>
+      </div><!-- /app-body -->
+    </div><!-- /app-shell -->
+
+    <script>
+      // ── Role permissions (mirrors src/security/permissions.ts) ──
+      const ROLE_PERMISSIONS = {
+        admin:    new Set(['view:agents','view:repos','view:logs','view:dashboards','view:chat','view:docs','manage:deploy','manage:workflows','manage:contracts','manage:terminal','manage:agent-tools','admin:all']),
+        operator: new Set(['manage:workflows','manage:contracts','manage:terminal','manage:agent-tools','view:chat','view:docs']),
+        user:     new Set(['view:chat','view:docs']),
+        guest:    new Set([]),
+      };
+
+      const FEATURE_ACTIONS = {
+        'view:agents':        'view:agents',
+        'manage:workflows':   'manage:workflows',
+        'view:dashboards':    'view:dashboards',
+        'view:logs':          'view:logs',
+        'view:chat':          'view:chat',
+      };
+
+      const app = document.getElementById('app');
+      const currentRole = app.dataset.role || 'guest';
+      const perms = ROLE_PERMISSIONS[currentRole] || ROLE_PERMISSIONS.guest;
+
+      function can(action) { return perms.has(action); }
+
+      // ── Update role badge ──
+      document.getElementById('role-label').textContent = currentRole;
+
+      // ── Show/hide elements by data-requires ──
+      document.querySelectorAll('[data-requires]').forEach(el => {
+        if (!can(el.dataset.requires)) {
+          if (el.tagName === 'A' || el.tagName === 'BUTTON') {
+            el.style.opacity = '0.4';
+            el.style.pointerEvents = 'none';
+            el.setAttribute('aria-disabled', 'true');
+          }
+        }
+      });
+
+      // ── Tab switching ──
+      const tabs   = document.querySelectorAll('.tab');
+      const abBtns = document.querySelectorAll('.activity-bar button[data-tab]');
+      const panels = document.querySelectorAll('.panel');
+
+      function switchTab(id) {
+        tabs.forEach(t   => t.classList.toggle('active',   t.dataset.tab === id));
+        abBtns.forEach(b => b.classList.toggle('active',   b.dataset.tab === id));
+        panels.forEach(p => {
+          const active = p.id === 'panel-' + id;
+          p.classList.toggle('active', active);
+        });
+        applyRbacToCurrentPanel(id);
       }
 
-      send.addEventListener('click', () => {
-        const text = input.value.trim();
+      function applyRbacToCurrentPanel(id) {
+        if (id === 'workflows') {
+          const banner = document.getElementById('wf-rbac-banner');
+          banner.classList.toggle('visible', !can('manage:workflows'));
+          document.getElementById('run-workflow-btn').disabled = !can('manage:workflows');
+        } else if (id === 'agents') {
+          const banner = document.getElementById('agents-rbac-banner');
+          banner.classList.toggle('visible', !can('view:agents'));
+        }
+      }
+
+      tabs.forEach(t => t.addEventListener('click', () => {
+        if (t.dataset.requires && !can(t.dataset.requires)) return;
+        switchTab(t.dataset.tab);
+      }));
+
+      abBtns.forEach(b => b.addEventListener('click', () => {
+        if (b.dataset.requires && !can(b.dataset.requires)) return;
+        switchTab(b.dataset.tab);
+      }));
+
+      // ── Mobile menu ──
+      const menuBtn      = document.getElementById('menu-btn');
+      const mobileDrawer = document.getElementById('mobile-drawer');
+      const drawerOverlay= document.getElementById('drawer-overlay');
+
+      function toggleDrawer(open) {
+        mobileDrawer.classList.toggle('open', open);
+        drawerOverlay.classList.toggle('open', open);
+        menuBtn.classList.toggle('open', open);
+        menuBtn.setAttribute('aria-expanded', String(open));
+      }
+
+      menuBtn.addEventListener('click', () => toggleDrawer(!mobileDrawer.classList.contains('open')));
+      drawerOverlay.addEventListener('click', () => toggleDrawer(false));
+      mobileDrawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleDrawer(false)));
+
+      // ── Chat mode toggle ──
+      const modeBtns = document.querySelectorAll('.mode-btn');
+      let chatMode = 'public';
+
+      modeBtns.forEach(btn => btn.addEventListener('click', () => {
+        const m = btn.dataset.mode;
+        if (m === 'auth' && !can('view:chat')) {
+          document.getElementById('chat-rbac-banner').classList.add('visible');
+          return;
+        }
+        chatMode = m;
+        modeBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === m));
+        document.getElementById('chat-rbac-banner').classList.remove('visible');
+      }));
+
+      // ── Streaming chat ──
+      const chatMessages = document.getElementById('chat-messages');
+      const chatInput    = document.getElementById('chat-input');
+      const chatSend     = document.getElementById('chat-send');
+      const agentSelect  = document.getElementById('agent-select');
+
+      const AGENT_RESPONSES = {
+        'cyberai':        'Analyzing your request with CyberAi security protocols…',
+        'copilot-core':   'Reviewing code and generating suggestions via Copilot Core…',
+        'example-agent':  'Example agent processing your input…',
+        'terminal-mobile':'Terminal Mobile agent executing command…',
+      };
+
+      function appendBubble(text, role, streaming) {
+        const el = document.createElement('div');
+        el.className = 'chat-bubble ' + (role === 'user' ? 'chat-bubble-user' : 'chat-bubble-ai');
+        if (streaming) el.classList.add('typing-cursor');
+        el.textContent = text;
+        chatMessages.appendChild(el);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return el;
+      }
+
+      function streamText(el, text, onDone) {
+        let i = 0;
+        const interval = setInterval(() => {
+          el.textContent = text.slice(0, ++i);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+          if (i >= text.length) {
+            clearInterval(interval);
+            el.classList.remove('typing-cursor');
+            if (onDone) onDone();
+          }
+        }, 18);
+      }
+
+      let isSending = false;
+
+      function sendMessage() {
+        if (isSending) return;
+        const text = chatInput.value.trim();
         if (!text) return;
-        addMessage(text, 'user');
-        input.value = '';
-        setTimeout(() => addMessage('Processing your request…', 'ai'), 400);
+
+        appendBubble(text, 'user');
+        chatInput.value = '';
+        chatInput.style.height = '';
+
+        isSending = true;
+        chatSend.disabled = true;
+
+        const agentKey = agentSelect.value;
+        const response = AGENT_RESPONSES[agentKey] || 'Processing…';
+
+        setTimeout(() => {
+          const el = appendBubble('', 'ai', true);
+          streamText(el, response, () => {
+            isSending = false;
+            chatSend.disabled = false;
+            chatInput.focus();
+          });
+        }, 350);
+      }
+
+      chatSend.addEventListener('click', sendMessage);
+
+      chatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
       });
 
-      input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') send.click();
+      // Auto-resize textarea
+      chatInput.addEventListener('input', () => {
+        chatInput.style.height = '';
+        chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
       });
+
+      // ── Workflow run ──
+      document.getElementById('run-workflow-btn').addEventListener('click', () => {
+        if (!can('manage:workflows')) return;
+        const logs = document.getElementById('workflow-logs');
+        const line = document.createElement('div');
+        line.className = 'log-line accent';
+        line.textContent = '▶ Manual run triggered at ' + new Date().toLocaleTimeString();
+        logs.appendChild(line);
+        logs.scrollTop = logs.scrollHeight;
+      });
+
+      // ── Workflow row selection ──
+      document.querySelectorAll('.workflow-row').forEach(row => {
+        row.addEventListener('click', () => {
+          document.querySelectorAll('.workflow-row').forEach(r => r.style.borderColor = '');
+          row.style.borderColor = 'var(--accent)';
+        });
+      });
+
     </script>
   </body>
 </html>

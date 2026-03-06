@@ -1,7 +1,20 @@
 /**
  * Security and Audit Tools
- * Provides security scanning and vulnerability detection
+ * Provides security scanning, vulnerability detection, and RBAC utilities.
  */
+
+export { Role } from './roles.js';
+export type { RoleType } from './roles.js';
+export { hasPermission } from './permissions.js';
+export type { Action } from './permissions.js';
+export {
+  canAccessRoute,
+  canUseFeature,
+  getUnauthorizedRedirect,
+  assertRouteAccess,
+  ROUTE_REQUIREMENTS,
+  FEATURE_REQUIREMENTS,
+} from './guards.js';
 
 export interface SecurityScan {
   timestamp: Date;

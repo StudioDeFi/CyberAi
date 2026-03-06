@@ -10,6 +10,11 @@
     "documentation": "https://cyberai.network/docs/agents/copilot-core",
     "tags": ["agent", "copilot", "code-generation", "analysis"]
   },
+  "ui": {
+    "color": "cyan",
+    "badge": "CP",
+    "icon": "🧠"
+  },
   "capabilities": {
     "actions": [
       {

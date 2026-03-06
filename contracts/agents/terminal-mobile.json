@@ -10,6 +10,11 @@
     "documentation": "https://cyberai.network/docs/agents/terminal-mobile",
     "tags": ["agent", "terminal", "mobile", "ios"]
   },
+  "ui": {
+    "color": "cyan",
+    "badge": "TM",
+    "icon": "📱"
+  },
   "capabilities": {
     "actions": [
       {
