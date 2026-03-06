@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberAi Dashboard</title>
+    <style>
+      /* ── Hybrid dark + neon cyan theme ── */
+      :root {
+        --bg: #02070a;
+        --bg-panel: #050d13;
+        --text: #e6faff;
+        --text-dim: #8bbcc7;
+        --border: #0a1f26;
+        --accent: #00eaff;
+        --accent-dark: #009bb3;
+        --accent-glow: rgba(0, 234, 255, 0.45);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+
+      /* ── Shell ── */
+      .dashboard-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* ── Header ── */
+      .dashboard-header {
+        background: var(--bg-panel);
+        border-bottom: 1px solid var(--border);
+        padding: 0.7rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        box-shadow: 0 2px 12px rgba(0, 234, 255, 0.06);
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .logo {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--accent);
+        text-shadow: 0 0 8px var(--accent-glow);
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .header-nav {
+        display: none;
+        align-items: center;
+        gap: 1.25rem;
+      }
+
+      .header-nav a {
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-bottom: 2px solid transparent;
+        padding-bottom: 2px;
+        transition: all 0.2s;
+      }
+
+      .header-nav a:hover,
+      .header-nav a.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        text-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      .role-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      /* ── Mobile hamburger ── */
+      .mobile-menu-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.4rem;
+      }
+
+      .mobile-menu-btn span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: all 0.25s;
+      }
+
+      .mobile-menu-btn.open span:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 4px);
+      }
+      .mobile-menu-btn.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .mobile-menu-btn.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -4px);
+      }
+
+      /* ── Sidebar overlay (mobile) ── */
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 149;
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        width: 220px;
+        background: var(--bg-panel);
+        border-right: 1px solid var(--border);
+        padding: 1.25rem 0;
+        flex-direction: column;
+        gap: 0;
+        flex-shrink: 0;
+
+        /* Mobile: slide-in drawer */
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 150;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        display: flex;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-group-label {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--text-dim);
+        padding: 0.75rem 1.25rem 0.3rem;
+      }
+
+      .sidebar a {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.65rem 1.25rem;
+        color: var(--text-dim);
+        text-decoration: none;
+        font-size: 0.88rem;
+        border-left: 3px solid transparent;
+        min-height: 44px;
+        transition: all 0.2s;
+      }
+
+      .sidebar a:hover,
+      .sidebar a.active {
+        color: var(--accent);
+        background: rgba(0, 234, 255, 0.06);
+        border-left-color: var(--accent);
+      }
+
+      .sidebar a[data-rbac-disabled] {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      /* ── Body ── */
+      .dashboard-body {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      /* ── Main area ── */
+      .main-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+      }
+
+      /* ── Section panels ── */
+      .dash-section {
+        display: none;
+      }
+      .dash-section.active {
+        display: block;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .section-header h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      /* ── RBAC banner ── */
+      .rbac-banner {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        background: rgba(255, 77, 106, 0.08);
+        border: 1px solid rgba(255, 77, 106, 0.35);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        color: #ff4d6a;
+        margin-bottom: 1.25rem;
+      }
+
+      .rbac-banner.visible {
+        display: flex;
+      }
+      .rbac-banner a {
+        color: var(--accent);
+      }
+
+      /* ── Stat cards ── */
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.75rem;
+      }
+
+      .stat-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.25rem;
+        transition: all 0.2s;
+      }
+
+      .stat-card:hover {
+        border-color: var(--accent-dark);
+        box-shadow: 0 0 12px var(--accent-glow);
+      }
+
+      .stat-card .label {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.4rem;
+      }
+
+      .stat-card .value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: var(--accent);
+        text-shadow: 0 0 8px var(--accent-glow);
+      }
+
+      /* ── Table ── */
+      .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+
+      .data-table th {
+        text-align: left;
+        padding: 0.5rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text-dim);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .data-table td {
+        padding: 0.65rem 0.75rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+
+      .data-table tr:hover td {
+        background: rgba(0, 234, 255, 0.03);
+      }
+
+      /* ── Status dots / badges ── */
+      .status-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+      }
+
+      .status-dot.running {
+        background: var(--accent);
+        box-shadow: 0 0 5px var(--accent-glow);
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+      .status-dot.success {
+        background: #06ffa5;
+      }
+      .status-dot.failed {
+        background: #ff4d6a;
+      }
+      .status-dot.idle {
+        background: var(--text-dim);
+      }
+      .status-dot.active {
+        background: var(--accent);
+        box-shadow: 0 0 5px var(--accent-glow);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      .badge {
+        font-size: 0.72rem;
+        padding: 0.15rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid var(--accent-dark);
+        color: var(--accent-dark);
+        white-space: nowrap;
+      }
+
+      .badge.cyan {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .badge.red {
+        border-color: #ff4d6a;
+        color: #ff4d6a;
+      }
+      .badge.success {
+        border-color: #06ffa5;
+        color: #06ffa5;
+      }
+
+      /* ── Buttons ── */
+      .btn {
+        padding: 0.4rem 0.9rem;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: 1px solid var(--accent);
+        background: none;
+        color: var(--accent);
+      }
+
+      .btn:hover {
+        background: var(--accent);
+        color: var(--bg);
+        box-shadow: 0 0 8px var(--accent-glow);
+      }
+
+      .btn-solid {
+        background: var(--accent);
+        color: var(--bg);
+      }
+      .btn-solid:hover {
+        background: var(--accent-dark);
+        border-color: var(--accent-dark);
+      }
+
+      .btn-danger {
+        border-color: #ff4d6a;
+        color: #ff4d6a;
+      }
+      .btn-danger:hover {
+        background: #ff4d6a;
+        color: #fff;
+        box-shadow: none;
+      }
+
+      /* ── Log viewer ── */
+      .log-viewer {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        font-family: monospace;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        max-height: 400px;
+        overflow-y: auto;
+        line-height: 1.7;
+      }
+
+      .log-viewer .log-line.accent {
+        color: var(--accent);
+      }
+      .log-viewer .log-line.success {
+        color: #06ffa5;
+      }
+      .log-viewer .log-line.error {
+        color: #ff4d6a;
+      }
+
+      /* ── Settings form ── */
+      .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        max-width: 560px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-bottom: 0.35rem;
+      }
+
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        color: var(--text);
+        font-size: 0.88rem;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 6px var(--accent-glow);
+      }
+
+      .form-group select option {
+        background: var(--bg-panel);
+      }
+
+      /* ── Admin panel ── */
+      .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .admin-card {
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: all 0.2s;
+      }
+
+      .admin-card:hover {
+        border-color: var(--accent-dark);
+        box-shadow: 0 0 10px var(--accent-glow);
+      }
+
+      .admin-card h3 {
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      .admin-card p {
+        font-size: 0.78rem;
+        color: var(--text-dim);
+      }
+
+      /* ── Desktop breakpoints ── */
+      @media (min-width: 769px) {
+        .mobile-menu-btn {
+          display: none;
+        }
+        .header-nav {
+          display: flex;
+        }
+
+        .sidebar {
+          position: static;
+          transform: none;
+          display: flex;
+          width: 220px;
+        }
+
+        .sidebar-overlay {
+          display: none !important;
+        }
+        .main-area {
+          padding: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!--
+      data-role: simulates the current session role.
+      Values: 'admin' | 'operator' | 'user' | 'guest'
+    -->
+    <div class="dashboard-shell" id="dash" data-role="admin">
+      <!-- Header -->
+      <header class="dashboard-header">
+        <a href="/" class="logo">🔒 CyberAi</a>
+        <nav class="header-nav">
+          <a href="/app">App</a>
+          <a href="/dashboard" class="active">Dashboard</a>
+          <a href="/operators" data-requires="manage:workflows">Console</a>
+          <a href="/docs">Docs</a>
+        </nav>
+        <span class="role-badge" id="role-label">admin</span>
+        <button
+          class="mobile-menu-btn"
+          id="sidebar-toggle"
+          aria-label="Toggle sidebar"
+          aria-expanded="false"
+        >
+          <span></span><span></span><span></span>
+        </button>
+      </header>
+
+      <!-- Sidebar overlay -->
+      <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+      <div class="dashboard-body">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <span class="sidebar-group-label">Overview</span>
+          <a href="#" class="active" data-section="overview" aria-label="Overview">📊 Overview</a>
+
+          <span class="sidebar-group-label">Manage</span>
+          <a href="#" data-section="agents" data-requires="view:agents" aria-label="Agents"
+            >🤖 Agents</a
+          >
+          <a
+            href="#"
+            data-section="contracts"
+            data-requires="manage:contracts"
+            aria-label="Contracts"
+            >📜 Contracts</a
+          >
+          <a
+            href="#"
+            data-section="workflows"
+            data-requires="manage:workflows"
+            aria-label="Workflows"
+            >⚙️ Workflows</a
+          >
+
+          <span class="sidebar-group-label">Monitor</span>
+          <a href="#" data-section="logs" data-requires="view:logs" aria-label="Logs">📋 Logs</a>
+
+          <span class="sidebar-group-label">System</span>
+          <a href="#" data-section="settings" data-requires="manage:deploy" aria-label="Settings"
+            >🔧 Settings</a
+          >
+          <a href="#" data-section="admin" data-requires="admin:all" aria-label="Admin">👑 Admin</a>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-area">
+          <!-- ── Overview ── -->
+          <section class="dash-section active" id="section-overview">
+            <div class="section-header">
+              <h1>Overview</h1>
+            </div>
+            <div class="cards-grid">
+              <div class="stat-card">
+                <div class="label">Active Agents</div>
+                <div class="value">4</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Contracts Scanned</div>
+                <div class="value">248</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Vulnerabilities</div>
+                <div class="value">3</div>
+              </div>
+              <div class="stat-card">
+                <div class="label">Workflows Running</div>
+                <div class="value">2</div>
+              </div>
+            </div>
+            <h2
+              style="
+                font-size: 0.9rem;
+                color: var(--text-dim);
+                margin-bottom: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+              "
+            >
+              Quick Status
+            </h2>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Status</th>
+                  <th>Last Active</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🔒 CyberAi</td>
+                  <td><span class="status-dot running"></span>running</td>
+                  <td>now</td>
+                </tr>
+                <tr>
+                  <td>🧠 Copilot Core</td>
+                  <td><span class="status-dot running"></span>running</td>
+                  <td>1 min ago</td>
+                </tr>
+                <tr>
+                  <td>🤖 Example Agent</td>
+                  <td><span class="status-dot idle"></span>idle</td>
+                  <td>5 min ago</td>
+                </tr>
+                <tr>
+                  <td>📱 Terminal Mobile</td>
+                  <td><span class="status-dot idle"></span>idle</td>
+                  <td>12 min ago</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── Agents ── -->
+          <section class="dash-section" id="section-agents">
+            <div class="rbac-banner" id="agents-rbac"></div>
+            <div class="section-header">
+              <h1>Agents</h1>
+              <button class="btn btn-solid" id="register-agent-btn" aria-label="Register new agent">
+                + Register
+              </button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Agent</th>
+                  <th>Type</th>
+                  <th>Color</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>🔒 CyberAi</td>
+                  <td><span class="badge">security</span></td>
+                  <td><span class="badge cyan">cyan</span></td>
+                  <td><span class="status-dot running"></span>running</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>🧠 Copilot Core</td>
+                  <td><span class="badge">analysis</span></td>
+                  <td><span class="badge cyan">cyan</span></td>
+                  <td><span class="status-dot running"></span>running</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>🤖 Example Agent</td>
+                  <td><span class="badge">template</span></td>
+                  <td><span class="badge cyan">cyan</span></td>
+                  <td><span class="status-dot idle"></span>idle</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>📱 Terminal Mobile</td>
+                  <td><span class="badge">mobile</span></td>
+                  <td><span class="badge cyan">cyan</span></td>
+                  <td><span class="status-dot idle"></span>idle</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── Contracts ── -->
+          <section class="dash-section" id="section-contracts">
+            <div class="rbac-banner" id="contracts-rbac"></div>
+            <div class="section-header">
+              <h1>Contracts</h1>
+              <button class="btn btn-solid" aria-label="Deploy new contract">+ Deploy</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Contract</th>
+                  <th>Type</th>
+                  <th>Owner</th>
+                  <th>Audited</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>example-agent.json</td>
+                  <td><span class="badge">agent</span></td>
+                  <td>cyberai</td>
+                  <td><span class="badge red">No</span></td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Audit
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>copilot-core.json</td>
+                  <td><span class="badge">agent</span></td>
+                  <td>GitHub</td>
+                  <td><span class="badge success">Yes</span></td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      View
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>terminal-mobile.json</td>
+                  <td><span class="badge">agent</span></td>
+                  <td>SolanaRemix</td>
+                  <td><span class="badge red">No</span></td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Audit
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ── Workflows ── -->
+          <section class="dash-section" id="section-workflows">
+            <div class="rbac-banner" id="workflows-rbac"></div>
+            <div class="section-header">
+              <h1>Workflows</h1>
+              <button class="btn btn-solid" id="wf-run-btn" aria-label="Run workflow">▶ Run</button>
+            </div>
+            <table class="data-table" style="margin-bottom: 1.25rem">
+              <thead>
+                <tr>
+                  <th>Workflow</th>
+                  <th>Agent</th>
+                  <th>Status</th>
+                  <th>Duration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>security-audit</td>
+                  <td><span class="badge cyan">🔒 CyberAi</span></td>
+                  <td><span class="status-dot running"></span>running</td>
+                  <td>2m 14s</td>
+                  <td>
+                    <button
+                      class="btn btn-danger"
+                      style="font-size: 0.75rem; padding: 0.2rem 0.6rem"
+                    >
+                      Stop
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>contract-validation</td>
+                  <td><span class="badge">🤖 Example Agent</span></td>
+                  <td><span class="status-dot success"></span>success</td>
+                  <td>0m 42s</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Re-run
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>mobile-bootstrap</td>
+                  <td><span class="badge">📱 Terminal Mobile</span></td>
+                  <td><span class="status-dot idle"></span>idle</td>
+                  <td>—</td>
+                  <td>
+                    <button class="btn" style="font-size: 0.75rem; padding: 0.2rem 0.6rem">
+                      Run
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <h3 style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.5rem">
+              Execution Log
+            </h3>
+            <div class="log-viewer" id="wf-log">
+              <div class="log-line accent">▶ security-audit started</div>
+              <div class="log-line">Scanning contracts/agents/…</div>
+              <div class="log-line success">✓ example-agent — OK</div>
+              <div class="log-line success">✓ copilot-core — OK</div>
+              <div class="log-line success">✓ terminal-mobile — OK</div>
+              <div class="log-line">Running RBAC guard checks…</div>
+            </div>
+          </section>
+
+          <!-- ── Logs ── -->
+          <section class="dash-section" id="section-logs">
+            <div class="rbac-banner" id="logs-rbac"></div>
+            <div class="section-header">
+              <h1>Audit Logs</h1>
+              <button class="btn" id="clear-logs-btn" aria-label="Clear logs">Clear</button>
+            </div>
+            <div class="log-viewer" id="audit-log">
+              <div class="log-line">
+                [2026-03-06 00:50:01] INFO User login: admin@cyberai.network
+              </div>
+              <div class="log-line accent">
+                [2026-03-06 00:50:14] INFO Workflow security-audit started
+              </div>
+              <div class="log-line success">
+                [2026-03-06 00:50:56] OK contract-validation completed
+              </div>
+              <div class="log-line">
+                [2026-03-06 00:51:03] INFO RBAC check: admin → /dashboard/admin ✓
+              </div>
+              <div class="log-line">[2026-03-06 00:51:20] INFO Agent copilot-core registered</div>
+              <div class="log-line success">[2026-03-06 00:51:35] OK All contracts validated</div>
+              <div class="log-line">
+                [2026-03-06 00:51:58] INFO Chat session started — user mode
+              </div>
+            </div>
+          </section>
+
+          <!-- ── Settings ── -->
+          <section class="dash-section" id="section-settings">
+            <div class="rbac-banner" id="settings-rbac"></div>
+            <div class="section-header">
+              <h1>Settings</h1>
+            </div>
+            <form class="settings-form" onsubmit="return false;">
+              <div class="form-group">
+                <label for="api-endpoint">API Endpoint</label>
+                <input id="api-endpoint" type="url" value="https://api.cyberai.network" />
+              </div>
+              <div class="form-group">
+                <label for="deploy-env">Deploy Environment</label>
+                <select id="deploy-env">
+                  <option value="production">Production</option>
+                  <option value="staging">Staging</option>
+                  <option value="development">Development</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="log-level">Log Level</label>
+                <select id="log-level">
+                  <option value="info">Info</option>
+                  <option value="debug">Debug</option>
+                  <option value="warn">Warn</option>
+                  <option value="error">Error</option>
+                </select>
+              </div>
+              <div>
+                <button class="btn btn-solid" type="submit">Save Settings</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- ── Admin ── -->
+          <section class="dash-section" id="section-admin">
+            <div class="rbac-banner" id="admin-rbac"></div>
+            <div class="section-header">
+              <h1>Admin</h1>
+              <span class="badge cyan">admin only</span>
+            </div>
+            <div class="admin-grid">
+              <div class="admin-card">
+                <h3>👥 User Management</h3>
+                <p>Manage users, roles, and permissions across the platform.</p>
+                <button class="btn" style="margin-top: 0.5rem">Manage Users</button>
+              </div>
+              <div class="admin-card">
+                <h3>🔐 RBAC Config</h3>
+                <p>Configure role-based access control rules and action mappings.</p>
+                <button class="btn" style="margin-top: 0.5rem">Edit RBAC</button>
+              </div>
+              <div class="admin-card">
+                <h3>🚀 Deploy Controls</h3>
+                <p>Trigger deployments, manage GitHub Pages builds, and roll back.</p>
+                <button class="btn" style="margin-top: 0.5rem">Deploy</button>
+              </div>
+              <div class="admin-card">
+                <h3>📦 Agent Registry</h3>
+                <p>Register, update, or decommission agents in the ecosystem.</p>
+                <button class="btn" style="margin-top: 0.5rem">Registry</button>
+              </div>
+            </div>
+            <h3 style="font-size: 0.85rem; color: var(--text-dim); margin-bottom: 0.5rem">
+              System Health
+            </h3>
+            <div class="log-viewer">
+              <div class="log-line success">✓ RBAC system: active</div>
+              <div class="log-line success">✓ Agent registry: 4 agents</div>
+              <div class="log-line success">✓ GitHub Pages: deployed</div>
+              <div class="log-line accent">• Workflow security-audit: running</div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../public/rbac-permissions.js"></script>
+    <script>
+      // ── Role permissions loaded from public/rbac-permissions.js ──
+      // Canonical data: src/security/role-permissions.json
+      const ROLE_PERMISSIONS = window.CYBER_RBAC.rolePermissions;
+
+      const dash = document.getElementById('dash');
+      const currentRole = dash.dataset.role || 'guest';
+      const perms = ROLE_PERMISSIONS[currentRole] || ROLE_PERMISSIONS.guest;
+
+      function can(action) {
+        return perms.has(action);
+      }
+
+      // ── Update role badge ──
+      document.getElementById('role-label').textContent = currentRole;
+
+      // ── Section RBAC banners ──
+      const SECTION_REQUIREMENTS = {
+        agents: 'view:agents',
+        contracts: 'manage:contracts',
+        workflows: 'manage:workflows',
+        logs: 'view:logs',
+        settings: 'manage:deploy',
+        admin: 'admin:all',
+      };
+
+      for (const [section, action] of Object.entries(SECTION_REQUIREMENTS)) {
+        const banner = document.getElementById(section + '-rbac');
+        if (banner && !can(action)) {
+          banner.innerHTML =
+            '🔒 This section requires the <strong>' +
+            action +
+            '</strong> permission. <a href="/login">Sign in with a higher-privilege account.</a>';
+          banner.classList.add('visible');
+        }
+      }
+
+      // ── Disable nav items by data-requires ──
+      document.querySelectorAll('[data-requires]').forEach(el => {
+        if (!can(el.dataset.requires)) {
+          el.setAttribute('data-rbac-disabled', 'true');
+          el.style.opacity = '0.4';
+          el.style.pointerEvents = 'none';
+          el.setAttribute('aria-disabled', 'true');
+        }
+      });
+
+      // ── Section navigation ──
+      const sidebarLinks = document.querySelectorAll('.sidebar a[data-section]');
+      const sections = document.querySelectorAll('.dash-section');
+
+      function showSection(id) {
+        sidebarLinks.forEach(a => a.classList.toggle('active', a.dataset.section === id));
+        sections.forEach(s => s.classList.toggle('active', s.id === 'section-' + id));
+        // close mobile sidebar
+        closeSidebar();
+      }
+
+      sidebarLinks.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          if (link.getAttribute('data-rbac-disabled')) return;
+          showSection(link.dataset.section);
+        });
+      });
+
+      // ── Mobile sidebar ──
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+      function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('open');
+        sidebarToggle.classList.remove('open');
+        sidebarToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('open');
+        sidebarToggle.classList.add('open');
+        sidebarToggle.setAttribute('aria-expanded', 'true');
+      }
+
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+      });
+
+      sidebarOverlay.addEventListener('click', closeSidebar);
+
+      // ── Workflow run btn ──
+      document.getElementById('wf-run-btn').addEventListener('click', () => {
+        if (!can('manage:workflows')) return;
+        const log = document.getElementById('wf-log');
+        const line = document.createElement('div');
+        line.className = 'log-line accent';
+        line.textContent = '▶ Manual workflow run triggered at ' + new Date().toLocaleTimeString();
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+      });
+
+      // ── Clear logs btn ──
+      document.getElementById('clear-logs-btn').addEventListener('click', () => {
+        if (!can('view:logs')) return;
+        document.getElementById('audit-log').innerHTML =
+          '<div class="log-line accent">— Log cleared at ' +
+          new Date().toLocaleTimeString() +
+          ' —</div>';
+      });
+    </script>
+  </body>
+</html>

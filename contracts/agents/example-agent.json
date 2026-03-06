@@ -10,6 +10,11 @@
     "documentation": "https://cyberai.network/docs/agents/example-agent",
     "tags": ["example", "agent", "template"]
   },
+  "ui": {
+    "color": "cyan",
+    "badge": "EX",
+    "icon": "🤖"
+  },
   "capabilities": {
     "actions": [
       {
