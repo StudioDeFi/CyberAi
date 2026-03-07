@@ -6,6 +6,8 @@
 import { SwarmEngine } from '../swarm/engine.js';
 import { AgentRegistry } from '../agents/registry.js';
 import type { Workflow, WorkflowRun, Task, Runner } from '../swarm/types.js';
+import { Role, type RoleType } from '../security/roles.js';
+import { hasPermission, type Action } from '../security/permissions.js';
 
 export interface ControlPlaneConfig {
   maxActiveWorkflows: number;
@@ -131,22 +133,36 @@ export class ControlPlane {
 
   /**
    * Check if a swarm-specific action is permitted for a given role.
-   * This is a swarm-plane permission stub — the swarm actions (submit-workflow,
-   * manage-agents, etc.) are distinct from the canonical CyberAi RBAC actions
-   * in src/security/role-permissions.json and are intentionally managed here.
+   * Delegates to the canonical CyberAi RBAC system (`hasPermission` from
+   * `src/security/permissions.ts`), mapping swarm actions to the canonical
+   * `Action` type so that permission decisions stay consistent across the
+   * codebase and are governed by `src/security/role-permissions.json`.
+   *
+   * Swarm → canonical action mapping:
+   *  - submit-workflow  → manage:workflows
+   *  - manage-agents    → admin:all
+   *  - view-telemetry   → view:logs
+   *  - admin            → admin:all
    */
   checkPermission(
-    role: 'admin' | 'operator' | 'user' | 'guest',
+    role: RoleType,
     action: 'submit-workflow' | 'manage-agents' | 'view-telemetry' | 'admin'
   ): boolean {
-    const permissions: Record<typeof role, Set<typeof action>> = {
-      admin: new Set(['submit-workflow', 'manage-agents', 'view-telemetry', 'admin']),
-      operator: new Set(['submit-workflow', 'view-telemetry']),
-      user: new Set(['submit-workflow']),
-      guest: new Set(),
+    const actionMap: Record<typeof action, Action> = {
+      'submit-workflow': 'manage:workflows',
+      'manage-agents': 'admin:all',
+      'view-telemetry': 'view:logs',
+      admin: 'admin:all',
     };
 
-    return permissions[role].has(action);
+    const roleMap: Record<RoleType, Role> = {
+      admin: Role.Admin,
+      operator: Role.Operator,
+      user: Role.User,
+      guest: Role.Guest,
+    };
+
+    return hasPermission(roleMap[role], actionMap[action]);
   }
 
   // ─── Telemetry ────────────────────────────────────────────────────────────
