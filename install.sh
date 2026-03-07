@@ -98,14 +98,19 @@ npm run build 2>/dev/null || true
 
 CLI_BIN="$INSTALL_DIR/node_modules/.bin/godswarm"
 
-if [[ -d /usr/local/bin ]] && [[ -w /usr/local/bin ]]; then
-  ln -sf "$CLI_BIN" /usr/local/bin/godswarm 2>/dev/null || true
-  log_ok "CLI available globally: godswarm"
-elif [[ -d "$HOME/.local/bin" ]]; then
-  mkdir -p "$HOME/.local/bin"
-  ln -sf "$CLI_BIN" "$HOME/.local/bin/godswarm" 2>/dev/null || true
-  log_ok "CLI available at: ~/.local/bin/godswarm"
-  log_warn "Ensure ~/.local/bin is in your PATH"
+if [[ -x "$CLI_BIN" ]]; then
+  if [[ -d /usr/local/bin ]] && [[ -w /usr/local/bin ]]; then
+    ln -sf "$CLI_BIN" /usr/local/bin/godswarm 2>/dev/null || true
+    log_ok "CLI available globally: godswarm"
+  elif [[ -d "$HOME/.local/bin" ]]; then
+    mkdir -p "$HOME/.local/bin"
+    ln -sf "$CLI_BIN" "$HOME/.local/bin/godswarm" 2>/dev/null || true
+    log_ok "CLI available at: ~/.local/bin/godswarm"
+    log_warn "Ensure ~/.local/bin is in your PATH"
+  fi
+else
+  log_warn "CLI binary not found at: $CLI_BIN"
+  log_warn "The 'godswarm' command may not be available. Please check the installation or documentation."
 fi
 
 # ─── Success ──────────────────────────────────────────────────────────────────
