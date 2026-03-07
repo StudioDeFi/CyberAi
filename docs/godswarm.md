@@ -92,7 +92,7 @@ godswarm deploy kubernetes --env=production
 ### SDK Usage
 
 ```typescript
-import { createClient } from 'cyberai/sdk';
+import { createClient } from 'cyberai';
 
 const client = createClient('https://api.cyberai.network', 'your-api-key');
 
