@@ -151,6 +151,7 @@ export interface WorkflowStep {
   id: string;
   name: string;
   agentType: AgentType;
+  priority?: TaskPriority;
   input: TaskInput;
   dependsOn?: string[];
   timeoutMs?: number;
@@ -275,6 +276,9 @@ export type SwarmEventType =
   | 'task.started'
   | 'task.completed'
   | 'task.failed'
+  | 'task.cancelled'
+  | 'task.retrying'
+  | 'task.updated'
   | 'workflow.started'
   | 'workflow.completed'
   | 'workflow.failed'

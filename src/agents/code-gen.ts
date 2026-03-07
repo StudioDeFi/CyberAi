@@ -130,7 +130,7 @@ export interface Config {
 }
 
 export class Implementation {
-  constructor(private config: Config = {}) {}
+  constructor(private config: Partial<Config> = {}) {}
 
   async execute(): Promise<void> {
     // TODO: Implement: ${description}

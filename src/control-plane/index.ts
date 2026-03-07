@@ -134,8 +134,10 @@ export class ControlPlane {
   // ─── Permissions ──────────────────────────────────────────────────────────
 
   /**
-   * Check if an action is permitted for a given role
-   * Integrates with the existing CyberAi RBAC system
+   * Check if a swarm-specific action is permitted for a given role.
+   * This is a swarm-plane permission stub — the swarm actions (submit-workflow,
+   * manage-agents, etc.) are distinct from the canonical CyberAi RBAC actions
+   * in src/security/role-permissions.json and are intentionally managed here.
    */
   checkPermission(
     role: 'admin' | 'operator' | 'user' | 'guest',

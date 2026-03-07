@@ -18,7 +18,7 @@ export interface ToolDefinition {
   name: string;
   description: string;
   category: 'filesystem' | 'git' | 'docker' | 'blockchain' | 'web' | 'api' | 'system';
-  schema: Record<string, unknown>; // JSON Schema for args validation
+  schema: Record<string, unknown>; // JSON Schema describing args (documentation; not validated at runtime)
   executor: ToolExecutor;
 }
 

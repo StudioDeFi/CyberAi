@@ -89,10 +89,15 @@ fi
 
 log_info "Installing dependencies..."
 cd "$INSTALL_DIR"
-npm install --omit=dev --quiet
+# Install all dependencies (including devDependencies) so that tsc is available for the build step
+npm install --quiet
 
 log_info "Building project..."
-npm run build 2>/dev/null || true
+if npm run build; then
+  log_ok "Build succeeded"
+else
+  log_warn "Build step failed — the CLI may not be available until the project is built successfully"
+fi
 
 # ─── CLI Symlink ──────────────────────────────────────────────────────────────
 

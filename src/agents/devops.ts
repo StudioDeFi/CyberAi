@@ -110,7 +110,7 @@ export class DevOpsAgent extends BaseAgent {
         if (service.port) {
           manifests.push({
             filename: `k8s/${service.name}-service.yaml`,
-            content: this.generateK8sService(service),
+            content: this.generateK8sService(service, spec.environment),
           });
         }
       }
@@ -188,12 +188,12 @@ spec:
 `;
   }
 
-  private generateK8sService(service: ServiceSpec): string {
+  private generateK8sService(service: ServiceSpec, environment: string): string {
     return `apiVersion: v1
 kind: Service
 metadata:
   name: ${service.name}
-  namespace: cyberai-production
+  namespace: cyberai-${environment}
   labels:
     app: ${service.name}
 spec:

@@ -5,7 +5,6 @@
 
 import { randomUUID } from 'crypto';
 import type { AgentType, TaskPriority, WorkflowStep, Workflow } from './types.js';
-import { TaskGraphGenerator } from './task-graph.js';
 
 export interface PlanRequest {
   goal: string;
@@ -38,8 +37,6 @@ export interface Plan {
  * Heuristic planner that decomposes goals into agent tasks
  */
 export class SwarmPlanner {
-  private graphGenerator = new TaskGraphGenerator();
-
   /**
    * Decompose a high-level goal into a plan
    */

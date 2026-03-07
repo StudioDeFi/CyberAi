@@ -131,7 +131,7 @@ export class SwarmEngine {
     }
 
     // Enforce maximum concurrent workflows if configured
-    const maxConcurrent = (this as any).config?.maxConcurrentWorkflows;
+    const maxConcurrent = this.config.maxConcurrentWorkflows;
     if (typeof maxConcurrent === 'number' && maxConcurrent > 0) {
       let runningCount = 0;
       for (const run of this.workflowRuns.values()) {
@@ -197,27 +197,27 @@ export class SwarmEngine {
 
     let eventType: SwarmEventType;
     switch (status) {
-      case 'completed':
-        eventType = 'task.completed';
-        break;
-      case 'failed':
-        eventType = 'task.failed';
-        break;
-      case 'queued':
-        eventType = 'task.queued';
-        break;
-      case 'running':
-        eventType = 'task.started';
-        break;
-      case 'cancelled':
-        eventType = 'task.cancelled';
-        break;
-      case 'retrying':
-        eventType = 'task.retrying';
-        break;
-      default:
-        eventType = 'task.updated';
-        break;
+    case 'completed':
+      eventType = 'task.completed';
+      break;
+    case 'failed':
+      eventType = 'task.failed';
+      break;
+    case 'queued':
+      eventType = 'task.queued';
+      break;
+    case 'running':
+      eventType = 'task.started';
+      break;
+    case 'cancelled':
+      eventType = 'task.cancelled';
+      break;
+    case 'retrying':
+      eventType = 'task.retrying';
+      break;
+    default:
+      eventType = 'task.updated';
+      break;
     }
 
     this.emit(eventType, { taskId, status });

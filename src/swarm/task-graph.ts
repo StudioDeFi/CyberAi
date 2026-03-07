@@ -29,7 +29,7 @@ export class TaskGraphGenerator {
         title: step.name,
         description: `Execute step: ${step.name}`,
         type: step.agentType,
-        priority: 'normal',
+        priority: step.priority ?? 'normal',
         status: 'pending',
         input: step.input,
         retryCount: 0,
@@ -167,14 +167,20 @@ export class TaskGraphGenerator {
     const nodes = new Map<string, TaskNode>();
     const rawNodes = data['nodes'] as Array<{
       id: string;
-      task: Task;
+      task: Record<string, unknown>;
       dependencies: string[];
       dependents: string[];
     }>;
 
     for (const rawNode of rawNodes) {
+      // Revive Date fields that become strings after JSON round-trip
+      const task = {
+        ...rawNode.task,
+        createdAt: new Date(rawNode.task['createdAt'] as string),
+        updatedAt: new Date(rawNode.task['updatedAt'] as string),
+      } as Task;
       nodes.set(rawNode.id, {
-        task: rawNode.task,
+        task,
         dependencies: rawNode.dependencies,
         dependents: rawNode.dependents,
       });

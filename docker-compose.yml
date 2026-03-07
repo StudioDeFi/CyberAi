@@ -207,6 +207,9 @@ services:
     labels:
       <<: *swarm-labels
       com.cyberai.service: swarm-runner
+    # NOTE: The deploy section below applies only in Docker Swarm mode (docker stack deploy).
+    # It is ignored by `docker compose up` in standalone Compose mode.
+    # For local development, use `docker compose --profile swarm up --scale swarm-runner=3` instead.
     deploy:
       replicas: 3
       resources:
