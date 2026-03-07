@@ -41,7 +41,7 @@ export class ControlPlane {
   constructor(
     config: Partial<ControlPlaneConfig> = {},
     engine?: SwarmEngine,
-    agentRegistry?: AgentRegistry,
+    agentRegistry?: AgentRegistry
   ) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.engine = engine ?? new SwarmEngine();
@@ -67,9 +67,7 @@ export class ControlPlane {
     const activeRuns = this.engine.listWorkflowRuns().filter(r => r.status === 'running');
 
     if (activeRuns.length >= this.config.maxActiveWorkflows) {
-      throw new Error(
-        `Max concurrent workflows (${this.config.maxActiveWorkflows}) reached`,
-      );
+      throw new Error(`Max concurrent workflows (${this.config.maxActiveWorkflows}) reached`);
     }
 
     this.engine.registerWorkflow(workflow);
@@ -80,9 +78,7 @@ export class ControlPlane {
     const activeRuns = this.engine.listWorkflowRuns().filter(r => r.status === 'running');
 
     if (activeRuns.length >= this.config.maxActiveWorkflows) {
-      throw new Error(
-        `Max concurrent workflows (${this.config.maxActiveWorkflows}) reached`,
-      );
+      throw new Error(`Max concurrent workflows (${this.config.maxActiveWorkflows}) reached`);
     }
 
     return this.engine.processGoal(goal, userId);
@@ -141,7 +137,7 @@ export class ControlPlane {
    */
   checkPermission(
     role: 'admin' | 'operator' | 'user' | 'guest',
-    action: 'submit-workflow' | 'manage-agents' | 'view-telemetry' | 'admin',
+    action: 'submit-workflow' | 'manage-agents' | 'view-telemetry' | 'admin'
   ): boolean {
     const permissions: Record<typeof role, Set<typeof action>> = {
       admin: new Set(['submit-workflow', 'manage-agents', 'view-telemetry', 'admin']),

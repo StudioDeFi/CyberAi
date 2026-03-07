@@ -139,13 +139,7 @@ export interface TaskGraph {
 
 // ─── Workflow Types ───────────────────────────────────────────────────────────
 
-export type TriggerType =
-  | 'manual'
-  | 'schedule'
-  | 'webhook'
-  | 'event'
-  | 'git-push'
-  | 'pr-open';
+export type TriggerType = 'manual' | 'schedule' | 'webhook' | 'event' | 'git-push' | 'pr-open';
 
 export interface WorkflowStep {
   id: string;

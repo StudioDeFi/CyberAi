@@ -10,7 +10,7 @@ x-common-labels: &common-labels
 
 x-swarm-labels: &swarm-labels
   com.cyberai.version: ${CYBERAI_VERSION:-1.1.0}
-  com.godswarm.version: "1.0.0"
+  com.godswarm.version: '1.0.0'
   managed-by: god-swarm-ultra
 
 services:

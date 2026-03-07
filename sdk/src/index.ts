@@ -195,7 +195,7 @@ export class GodSwarmClient {
             method,
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${this.config.apiKey}`,
+              Authorization: `Bearer ${this.config.apiKey}`,
               'X-GOD-SWARM-Version': '1.0.0',
             },
             body: body ? JSON.stringify(body) : undefined,
@@ -206,9 +206,9 @@ export class GodSwarmClient {
         }
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({})) as Record<string, unknown>;
+          const errorData = (await response.json().catch(() => ({}))) as Record<string, unknown>;
           throw new Error(
-            (errorData['message'] as string) ?? `HTTP ${response.status}: ${response.statusText}`,
+            (errorData['message'] as string) ?? `HTTP ${response.status}: ${response.statusText}`
           );
         }
 
@@ -217,9 +217,7 @@ export class GodSwarmClient {
         lastError = err instanceof Error ? err : new Error(String(err));
 
         if (attempt < this.config.retries - 1) {
-          await new Promise(resolve =>
-            setTimeout(resolve, Math.pow(2, attempt) * 500),
-          );
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 500));
         }
       }
     }

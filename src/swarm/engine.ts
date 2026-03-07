@@ -138,9 +138,7 @@ export class SwarmEngine {
         if (run.status === 'running') {
           runningCount += 1;
           if (runningCount >= maxConcurrent) {
-            throw new Error(
-              `Maximum concurrent workflows limit (${maxConcurrent}) reached`
-            );
+            throw new Error(`Maximum concurrent workflows limit (${maxConcurrent}) reached`);
           }
         }
       }
@@ -197,27 +195,27 @@ export class SwarmEngine {
 
     let eventType: SwarmEventType;
     switch (status) {
-    case 'completed':
-      eventType = 'task.completed';
-      break;
-    case 'failed':
-      eventType = 'task.failed';
-      break;
-    case 'queued':
-      eventType = 'task.queued';
-      break;
-    case 'running':
-      eventType = 'task.started';
-      break;
-    case 'cancelled':
-      eventType = 'task.cancelled';
-      break;
-    case 'retrying':
-      eventType = 'task.retrying';
-      break;
-    default:
-      eventType = 'task.updated';
-      break;
+      case 'completed':
+        eventType = 'task.completed';
+        break;
+      case 'failed':
+        eventType = 'task.failed';
+        break;
+      case 'queued':
+        eventType = 'task.queued';
+        break;
+      case 'running':
+        eventType = 'task.started';
+        break;
+      case 'cancelled':
+        eventType = 'task.cancelled';
+        break;
+      case 'retrying':
+        eventType = 'task.retrying';
+        break;
+      default:
+        eventType = 'task.updated';
+        break;
     }
 
     this.emit(eventType, { taskId, status });
@@ -246,13 +244,11 @@ export class SwarmEngine {
       totalAgents: this.agents.size,
       activeAgents: Array.from(this.agents.values()).filter(a => a.status === 'running').length,
       totalRunners: this.runners.size,
-      availableRunners: Array.from(this.runners.values()).filter(
-        r => r.status === 'available',
-      ).length,
+      availableRunners: Array.from(this.runners.values()).filter(r => r.status === 'available')
+        .length,
       totalWorkflows: this.workflows.size,
-      activeWorkflowRuns: Array.from(this.workflowRuns.values()).filter(
-        r => r.status === 'running',
-      ).length,
+      activeWorkflowRuns: Array.from(this.workflowRuns.values()).filter(r => r.status === 'running')
+        .length,
       totalTasks: tasks.length,
       completedTasks: tasks.filter(t => t.status === 'completed').length,
       failedTasks: tasks.filter(t => t.status === 'failed').length,
@@ -271,7 +267,7 @@ export class SwarmEngine {
     const handlers = this.eventHandlers.get(type) ?? [];
     this.eventHandlers.set(
       type,
-      handlers.filter(h => h !== handler),
+      handlers.filter(h => h !== handler)
     );
   }
 

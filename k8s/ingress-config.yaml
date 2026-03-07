@@ -6,9 +6,9 @@ metadata:
   labels:
     managed-by: god-swarm-ultra
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+    nginx.ingress.kubernetes.io/ssl-redirect: 'true'
+    nginx.ingress.kubernetes.io/proxy-read-timeout: '300'
+    nginx.ingress.kubernetes.io/proxy-send-timeout: '300'
     cert-manager.io/cluster-issuer: letsencrypt-prod
 spec:
   ingressClassName: nginx
@@ -60,10 +60,10 @@ metadata:
 data:
   NODE_ENV: production
   LOG_LEVEL: info
-  SWARM_NAME: "GOD-SWARM ULTRA"
-  SWARM_VERSION: "1.0.0"
-  MAX_CONCURRENT_WORKFLOWS: "50"
-  TASK_TIMEOUT_MS: "300000"
-  HEARTBEAT_INTERVAL_MS: "30000"
-  ENABLE_TELEMETRY: "true"
-  ENABLE_SELF_IMPROVEMENT: "true"
+  SWARM_NAME: 'GOD-SWARM ULTRA'
+  SWARM_VERSION: '1.0.0'
+  MAX_CONCURRENT_WORKFLOWS: '50'
+  TASK_TIMEOUT_MS: '300000'
+  HEARTBEAT_INTERVAL_MS: '30000'
+  ENABLE_TELEMETRY: 'true'
+  ENABLE_SELF_IMPROVEMENT: 'true'

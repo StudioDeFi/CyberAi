@@ -24,24 +24,10 @@ export interface CodeGenResult {
 export class CodeGenAgent extends BaseAgent {
   constructor() {
     super('code-gen', 'Code Generation Agent', {
-      tools: [
-        'file-write',
-        'file-read',
-        'git-commit',
-        'test-runner',
-        'linter',
-        'formatter',
-      ],
+      tools: ['file-write', 'file-read', 'git-commit', 'test-runner', 'linter', 'formatter'],
       models: ['gpt-4o', 'claude-3-5-sonnet-20241022', 'o1-mini'],
       maxConcurrentTasks: 2,
-      supportedLanguages: [
-        'TypeScript',
-        'JavaScript',
-        'Python',
-        'Rust',
-        'Go',
-        'Solidity',
-      ],
+      supportedLanguages: ['TypeScript', 'JavaScript', 'Python', 'Rust', 'Go', 'Solidity'],
     });
   }
 
@@ -95,7 +81,7 @@ export class CodeGenAgent extends BaseAgent {
   private generateCodeSkeleton(
     description: string,
     language: string,
-    framework: string,
+    framework: string
   ): CodeGenResult {
     const lang = language.toLowerCase();
 
@@ -188,9 +174,7 @@ class Implementation:
 `;
 
     return {
-      files: [
-        { path: 'src/implementation.py', content, language: 'Python' },
-      ],
+      files: [{ path: 'src/implementation.py', content, language: 'Python' }],
       explanation: 'Generated Python implementation skeleton',
     };
   }
@@ -226,9 +210,7 @@ contract GeneratedContract {
 `;
 
     return {
-      files: [
-        { path: 'contracts/GeneratedContract.sol', content, language: 'Solidity' },
-      ],
+      files: [{ path: 'contracts/GeneratedContract.sol', content, language: 'Solidity' }],
       explanation: 'Generated Solidity contract skeleton',
     };
   }

@@ -230,7 +230,7 @@ metadata:
       test: ["CMD", "wget", "-qO-", "http://localhost:${s.port ?? 3000}/health"]
       interval: 30s
       timeout: 10s
-      retries: 3`,
+      retries: 3`
       )
       .join('\n\n');
 

@@ -114,8 +114,12 @@ describe('SwarmEngine', () => {
     });
 
     it('should list all agents', () => {
-      engine.registerAgent(makeAgent({ identity: { ...makeAgent().identity, id: 'a1', name: 'A1' } }));
-      engine.registerAgent(makeAgent({ identity: { ...makeAgent().identity, id: 'a2', name: 'A2' } }));
+      engine.registerAgent(
+        makeAgent({ identity: { ...makeAgent().identity, id: 'a1', name: 'A1' } })
+      );
+      engine.registerAgent(
+        makeAgent({ identity: { ...makeAgent().identity, id: 'a2', name: 'A2' } })
+      );
 
       const agents = engine.listAgents();
       expect(agents.length).toBe(2);
@@ -158,8 +162,14 @@ describe('SwarmEngine', () => {
     it('should return null when runner is at capacity', () => {
       engine.registerRunner(
         makeRunner({
-          capacity: { maxConcurrentJobs: 2, currentJobs: 2, cpuCores: 2, memoryGb: 4, hasGpu: false },
-        }),
+          capacity: {
+            maxConcurrentJobs: 2,
+            currentJobs: 2,
+            cpuCores: 2,
+            memoryGb: 4,
+            hasGpu: false,
+          },
+        })
       );
       expect(engine.getAvailableRunner()).toBeNull();
     });
@@ -498,9 +508,7 @@ describe('SwarmIntelligenceEngine', () => {
     it('should default to 3 rounds', () => {
       const result = engine.conductDebate({
         topic: 'Test',
-        positions: [
-          { agentId: 'a1', position: 'A', evidence: 'Because A' },
-        ],
+        positions: [{ agentId: 'a1', position: 'A', evidence: 'Because A' }],
       });
 
       expect(result.rounds).toHaveLength(3);
@@ -568,11 +576,25 @@ describe('SelfImprovementLoop', () => {
   it('should detect improving trend', () => {
     // First half: low scores
     for (let i = 0; i < 5; i++) {
-      loop.record({ agentId: 'a1', taskId: `t${i}`, success: true, durationMs: 1000, qualityScore: 0.4, timestamp: new Date() });
+      loop.record({
+        agentId: 'a1',
+        taskId: `t${i}`,
+        success: true,
+        durationMs: 1000,
+        qualityScore: 0.4,
+        timestamp: new Date(),
+      });
     }
     // Second half: high scores
     for (let i = 5; i < 10; i++) {
-      loop.record({ agentId: 'a1', taskId: `t${i}`, success: true, durationMs: 1000, qualityScore: 0.9, timestamp: new Date() });
+      loop.record({
+        agentId: 'a1',
+        taskId: `t${i}`,
+        success: true,
+        durationMs: 1000,
+        qualityScore: 0.9,
+        timestamp: new Date(),
+      });
     }
 
     const { trend } = loop.evaluate('a1');
@@ -581,7 +603,14 @@ describe('SelfImprovementLoop', () => {
 
   it('should suggest improvement for poor performers', () => {
     for (let i = 0; i < 15; i++) {
-      loop.record({ agentId: 'bad-agent', taskId: `t${i}`, success: false, durationMs: 5000, qualityScore: 0.3, timestamp: new Date() });
+      loop.record({
+        agentId: 'bad-agent',
+        taskId: `t${i}`,
+        success: false,
+        durationMs: 5000,
+        qualityScore: 0.3,
+        timestamp: new Date(),
+      });
     }
 
     const suggestion = loop.suggest('bad-agent');
@@ -591,7 +620,14 @@ describe('SelfImprovementLoop', () => {
 
   it('should return null for well-performing agents', () => {
     for (let i = 0; i < 15; i++) {
-      loop.record({ agentId: 'good-agent', taskId: `t${i}`, success: true, durationMs: 1000, qualityScore: 0.95, timestamp: new Date() });
+      loop.record({
+        agentId: 'good-agent',
+        taskId: `t${i}`,
+        success: true,
+        durationMs: 1000,
+        qualityScore: 0.95,
+        timestamp: new Date(),
+      });
     }
 
     const suggestion = loop.suggest('good-agent');

@@ -108,30 +108,30 @@ for await (const event of client.streamWorkflowEvents(result.runId)) {
 
 ## Core Modules
 
-| Module | Path | Description |
-|--------|------|-------------|
-| Swarm Engine | `src/swarm/` | Core orchestration hub |
-| Agent Framework | `src/agents/` | 7 autonomous agent types |
-| Control Plane | `src/control-plane/` | Lifecycle & scheduling |
-| Runners | `src/runners/` | Distributed execution |
-| Memory | `src/memory/` | Vector memory & learning |
-| Tools | `src/tools/` | Unified tool interface |
-| Marketplace | `src/marketplace/` | Agent catalog & billing |
-| Integrations | `src/integrations/` | External connectors |
-| CLI | `cli/` | `godswarm` CLI tool |
-| SDK | `sdk/` | JavaScript SDK |
+| Module          | Path                 | Description              |
+| --------------- | -------------------- | ------------------------ |
+| Swarm Engine    | `src/swarm/`         | Core orchestration hub   |
+| Agent Framework | `src/agents/`        | 7 autonomous agent types |
+| Control Plane   | `src/control-plane/` | Lifecycle & scheduling   |
+| Runners         | `src/runners/`       | Distributed execution    |
+| Memory          | `src/memory/`        | Vector memory & learning |
+| Tools           | `src/tools/`         | Unified tool interface   |
+| Marketplace     | `src/marketplace/`   | Agent catalog & billing  |
+| Integrations    | `src/integrations/`  | External connectors      |
+| CLI             | `cli/`               | `godswarm` CLI tool      |
+| SDK             | `sdk/`               | JavaScript SDK           |
 
 ## Agent Types
 
-| Agent | Capabilities |
-|-------|-------------|
-| **Planner** | Decomposes goals into executable subtasks |
-| **Code Gen** | Generates TypeScript, Python, Solidity, Go, Rust |
-| **Security** | Audits for vulnerabilities (OWASP, CWE, CVE) |
-| **DevOps** | Deploys Docker, Kubernetes, AWS, GCP infrastructure |
-| **Research** | Gathers and synthesizes external information |
-| **Trading** | Blockchain strategies on Solana, Ethereum, Base, Arbitrum |
-| **Repair** | Diagnoses and auto-fixes system failures |
+| Agent        | Capabilities                                              |
+| ------------ | --------------------------------------------------------- |
+| **Planner**  | Decomposes goals into executable subtasks                 |
+| **Code Gen** | Generates TypeScript, Python, Solidity, Go, Rust          |
+| **Security** | Audits for vulnerabilities (OWASP, CWE, CVE)              |
+| **DevOps**   | Deploys Docker, Kubernetes, AWS, GCP infrastructure       |
+| **Research** | Gathers and synthesizes external information              |
+| **Trading**  | Blockchain strategies on Solana, Ethereum, Base, Arbitrum |
+| **Repair**   | Diagnoses and auto-fixes system failures                  |
 
 ## Deployment
 
@@ -176,5 +176,5 @@ STRIPE_PUBLIC_KEY=pk_...
 
 ---
 
-*GOD-SWARM ULTRA — Autonomous AI Infrastructure for the Future of Development*  
-*Built with ❤️ on CyberAi Platform*
+_GOD-SWARM ULTRA — Autonomous AI Infrastructure for the Future of Development_  
+_Built with ❤️ on CyberAi Platform_

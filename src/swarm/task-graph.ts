@@ -4,14 +4,7 @@
  */
 
 import { randomUUID } from 'crypto';
-import type {
-  Task,
-  TaskGraph,
-  TaskNode,
-  WorkflowStep,
-  AgentType,
-  TaskPriority,
-} from './types.js';
+import type { Task, TaskGraph, TaskNode, WorkflowStep, AgentType, TaskPriority } from './types.js';
 
 export class TaskGraphGenerator {
   /**
@@ -86,7 +79,7 @@ export class TaskGraphGenerator {
    */
   generateFromPlan(
     workflowId: string,
-    planSteps: Array<{ name: string; type: AgentType; priority?: TaskPriority }>,
+    planSteps: Array<{ name: string; type: AgentType; priority?: TaskPriority }>
   ): TaskGraph {
     const steps: WorkflowStep[] = planSteps.map((s, i) => ({
       id: `step-${i}`,

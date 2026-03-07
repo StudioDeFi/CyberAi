@@ -39,28 +39,31 @@ export class GodSwarmCLI {
     const [command, subcommand, ...rest] = args;
 
     switch (command) {
-    case 'init':
-      return this.init(rest);
-    case 'agent':
-      return this.handleAgent(subcommand, rest);
-    case 'workflow':
-      return this.handleWorkflow(subcommand, rest);
-    case 'deploy':
-      return this.handleDeploy(subcommand, rest);
-    case 'status':
-      return this.status();
-    case 'run':
-      return this.run(subcommand, rest);
-    case 'help':
-    case '--help':
-    case '-h':
-      return this.help();
-    case 'version':
-    case '--version':
-    case '-v':
-      return this.version();
-    default:
-      return { success: false, error: `Unknown command: ${command}. Run 'godswarm help' for usage.` };
+      case 'init':
+        return this.init(rest);
+      case 'agent':
+        return this.handleAgent(subcommand, rest);
+      case 'workflow':
+        return this.handleWorkflow(subcommand, rest);
+      case 'deploy':
+        return this.handleDeploy(subcommand, rest);
+      case 'status':
+        return this.status();
+      case 'run':
+        return this.run(subcommand, rest);
+      case 'help':
+      case '--help':
+      case '-h':
+        return this.help();
+      case 'version':
+      case '--version':
+      case '-v':
+        return this.version();
+      default:
+        return {
+          success: false,
+          error: `Unknown command: ${command}. Run 'godswarm help' for usage.`,
+        };
     }
   }
 
@@ -92,16 +95,19 @@ export class GodSwarmCLI {
 
   private async handleAgent(subcommand: string, args: string[]): Promise<CLIResult> {
     switch (subcommand) {
-    case 'list':
-      return this.agentList();
-    case 'create':
-      return this.agentCreate(args);
-    case 'status':
-      return this.agentStatus(args[0]);
-    case 'logs':
-      return this.agentLogs(args[0]);
-    default:
-      return { success: false, error: `Unknown agent command: ${subcommand}. Use: list|create|status|logs` };
+      case 'list':
+        return this.agentList();
+      case 'create':
+        return this.agentCreate(args);
+      case 'status':
+        return this.agentStatus(args[0]);
+      case 'logs':
+        return this.agentLogs(args[0]);
+      default:
+        return {
+          success: false,
+          error: `Unknown agent command: ${subcommand}. Use: list|create|status|logs`,
+        };
     }
   }
 
@@ -151,16 +157,19 @@ export class GodSwarmCLI {
 
   private async handleWorkflow(subcommand: string, args: string[]): Promise<CLIResult> {
     switch (subcommand) {
-    case 'list':
-      return this.workflowList();
-    case 'run':
-      return this.workflowRun(args);
-    case 'status':
-      return this.workflowStatus(args[0]);
-    case 'create':
-      return this.workflowCreate(args);
-    default:
-      return { success: false, error: `Unknown workflow command: ${subcommand}. Use: list|run|status|create` };
+      case 'list':
+        return this.workflowList();
+      case 'run':
+        return this.workflowRun(args);
+      case 'status':
+        return this.workflowStatus(args[0]);
+      case 'create':
+        return this.workflowCreate(args);
+      default:
+        return {
+          success: false,
+          error: `Unknown workflow command: ${subcommand}. Use: list|run|status|create`,
+        };
     }
   }
 
@@ -176,7 +185,10 @@ export class GodSwarmCLI {
   private async workflowRun(args: string[]): Promise<CLIResult> {
     const workflowIdOrGoal = args[0];
     if (!workflowIdOrGoal) {
-      return { success: false, error: 'Usage: godswarm workflow run <workflow-id|"goal description">' };
+      return {
+        success: false,
+        error: 'Usage: godswarm workflow run <workflow-id|"goal description">',
+      };
     }
 
     try {
@@ -255,9 +267,7 @@ export class GodSwarmCLI {
     }
 
     try {
-      const run = await this.controlPlane.processNaturalLanguageGoal(
-        [goal, ...args].join(' '),
-      );
+      const run = await this.controlPlane.processNaturalLanguageGoal([goal, ...args].join(' '));
       return {
         success: true,
         data: { runId: run.id, status: run.status },

@@ -88,10 +88,7 @@ export class ResearchAgent extends BaseAgent {
     }
   }
 
-  private synthesizeResearch(
-    topic: string,
-    depth?: ResearchQuery['depth'],
-  ): ResearchResult {
+  private synthesizeResearch(topic: string, depth?: ResearchQuery['depth']): ResearchResult {
     const depthMultiplier = depth === 'deep' ? 5 : depth === 'moderate' ? 3 : 1;
 
     return {
@@ -102,19 +99,24 @@ export class ResearchAgent extends BaseAgent {
         `Finding ${i + 1}b: Implementation consideration for "${topic}"`,
       ]).flat(),
       sources: [
-        { title: 'Academic Research Papers', url: 'https://arxiv.org', excerpt: `Recent papers on ${topic}` },
+        {
+          title: 'Academic Research Papers',
+          url: 'https://arxiv.org',
+          excerpt: `Recent papers on ${topic}`,
+        },
         { title: 'Industry Documentation', excerpt: `Best practices for ${topic}` },
-        { title: 'Open Source Projects', url: 'https://github.com', excerpt: 'Reference implementations' },
+        {
+          title: 'Open Source Projects',
+          url: 'https://github.com',
+          excerpt: 'Reference implementations',
+        },
       ],
       confidence: 0.75,
       timestamp: new Date(),
     };
   }
 
-  private generateReport(
-    result: ResearchResult,
-    format?: ResearchQuery['outputFormat'],
-  ): string {
+  private generateReport(result: ResearchResult, format?: ResearchQuery['outputFormat']): string {
     if (format === 'summary') {
       return `# Research Summary: ${result.topic}\n\n${result.summary}\n\n**Confidence**: ${(result.confidence * 100).toFixed(0)}%`;
     }
@@ -130,11 +132,11 @@ ${result.keyFindings.map((f, i) => `${i + 1}. ${f}`).join('\n')}
 
 ## Sources
 ${result.sources
-    .map(
-      s => `- **${s.title}**${s.url ? ` — [Link](${s.url})` : ''}
-  ${s.excerpt ?? ''}`,
-    )
-    .join('\n')}
+  .map(
+    s => `- **${s.title}**${s.url ? ` — [Link](${s.url})` : ''}
+  ${s.excerpt ?? ''}`
+  )
+  .join('\n')}
 
 ## Confidence Assessment
 **Confidence**: ${(result.confidence * 100).toFixed(0)}%

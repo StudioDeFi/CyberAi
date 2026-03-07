@@ -51,9 +51,7 @@ export class AgentRegistry {
 
   getAvailableByType(type: AgentType): BaseAgent | null {
     return (
-      Array.from(this.agents.values()).find(
-        a => a.type === type && a.status === 'idle',
-      ) ?? null
+      Array.from(this.agents.values()).find(a => a.type === type && a.status === 'idle') ?? null
     );
   }
 
@@ -63,7 +61,15 @@ export class AgentRegistry {
 
   getStats(): Record<AgentType, { total: number; idle: number; running: number }> {
     const stats: Partial<Record<AgentType, { total: number; idle: number; running: number }>> = {};
-    const types: AgentType[] = ['planner', 'code-gen', 'security', 'devops', 'research', 'trading', 'repair'];
+    const types: AgentType[] = [
+      'planner',
+      'code-gen',
+      'security',
+      'devops',
+      'research',
+      'trading',
+      'repair',
+    ];
 
     for (const type of types) {
       const typeAgents = this.getByType(type);

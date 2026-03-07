@@ -84,9 +84,7 @@ export class ModelRouter {
 
     // Filter by preferred provider
     if (criteria.preferredProvider) {
-      const providerModels = candidates.filter(
-        m => m.provider === criteria.preferredProvider,
-      );
+      const providerModels = candidates.filter(m => m.provider === criteria.preferredProvider);
       if (providerModels.length > 0) {
         candidates = providerModels;
       }
@@ -109,9 +107,7 @@ export class ModelRouter {
 
     // Filter by cost constraint (maxCostUsd is interpreted as max USD per 1k input tokens)
     if (criteria.maxCostUsd !== undefined) {
-      const affordable = candidates.filter(
-        m => m.costPer1kInputTokens <= criteria.maxCostUsd!,
-      );
+      const affordable = candidates.filter(m => m.costPer1kInputTokens <= criteria.maxCostUsd!);
       if (affordable.length > 0) {
         candidates = affordable;
       }
@@ -128,7 +124,7 @@ export class ModelRouter {
     if (candidates.length === 0) {
       // Fall back to the cheapest model
       return this.registry.reduce((a, b) =>
-        a.costPer1kInputTokens < b.costPer1kInputTokens ? a : b,
+        a.costPer1kInputTokens < b.costPer1kInputTokens ? a : b
       );
     }
 
@@ -169,9 +165,7 @@ export class ModelRouter {
       return { model: m, score };
     });
 
-    return scored
-      .sort((a, b) => b.score - a.score)
-      .map(s => s.model);
+    return scored.sort((a, b) => b.score - a.score).map(s => s.model);
   }
 
   /**

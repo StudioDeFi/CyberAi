@@ -150,12 +150,10 @@ export class TradingAgent extends BaseAgent {
     }));
   }
 
-  private analyzeMarket(
-    strategy: TradingStrategy,
-    marketData: MarketData[],
-  ): TradeSignal[] {
+  private analyzeMarket(strategy: TradingStrategy, marketData: MarketData[]): TradeSignal[] {
     return marketData.map(data => {
-      const trend = data.priceChange24h > 2 ? 'bullish' : data.priceChange24h < -2 ? 'bearish' : 'neutral';
+      const trend =
+        data.priceChange24h > 2 ? 'bullish' : data.priceChange24h < -2 ? 'bearish' : 'neutral';
 
       let action: TradeSignal['action'] = 'hold';
       let confidence = 0.5;
@@ -197,10 +195,7 @@ export class TradingAgent extends BaseAgent {
     return 'Mixed market signals. Maintain current positions and monitor for trend confirmation.';
   }
 
-  private generateRiskWarnings(
-    strategy: TradingStrategy,
-    signals: TradeSignal[],
-  ): string[] {
+  private generateRiskWarnings(strategy: TradingStrategy, signals: TradeSignal[]): string[] {
     const warnings: string[] = [
       'This analysis is for informational purposes only and does not constitute financial advice',
       'Cryptocurrency markets are highly volatile — never invest more than you can afford to lose',
@@ -227,10 +222,11 @@ ${result.portfolioRecommendation}
 
 ## Trade Signals
 ${result.signals
-    .map(
-      s => `| ${s.token} | **${s.action.toUpperCase()}** | ${(s.confidence * 100).toFixed(0)}% | ${s.rationale} |`,
-    )
-    .join('\n')}
+  .map(
+    s =>
+      `| ${s.token} | **${s.action.toUpperCase()}** | ${(s.confidence * 100).toFixed(0)}% | ${s.rationale} |`
+  )
+  .join('\n')}
 
 ## Risk Warnings
 ${result.riskWarnings.map(w => `⚠️ ${w}`).join('\n')}

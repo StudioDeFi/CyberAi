@@ -117,7 +117,7 @@ export class SwarmRunner {
         output = await this.executeWithTimeout(
           handler(task, sandbox),
           sandbox.timeoutMs,
-          telemetry,
+          telemetry
         );
       } else {
         // Default mock execution
@@ -133,7 +133,7 @@ export class SwarmRunner {
       telemetry.endTime = new Date();
       telemetry.exitCode = 1;
       telemetry.logs.push(
-        `[Runner] Job ${telemetry.jobId} failed: ${err instanceof Error ? err.message : String(err)}`,
+        `[Runner] Job ${telemetry.jobId} failed: ${err instanceof Error ? err.message : String(err)}`
       );
 
       return {
@@ -158,13 +158,13 @@ export class SwarmRunner {
   private async executeWithTimeout<T>(
     promise: Promise<T>,
     timeoutMs: number,
-    telemetry: JobTelemetry,
+    telemetry: JobTelemetry
   ): Promise<T> {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
     const timeout = new Promise<never>((_, reject) => {
       timeoutId = setTimeout(
         () => reject(new Error(`Job timed out after ${timeoutMs}ms`)),
-        timeoutMs,
+        timeoutMs
       );
     });
     telemetry.logs.push(`[Runner] Executing with ${timeoutMs}ms timeout`);
@@ -212,7 +212,7 @@ export class SwarmRunner {
     successRate: number;
     avgDurationMs: number;
     currentLoad: number;
-    } {
+  } {
     const completed = this.completedJobs;
     const successful = completed.filter(j => j.exitCode === 0).length;
     const durations = completed
@@ -274,15 +274,12 @@ export class RunnerPool {
     const metrics = Array.from(this.runners.values()).map(r => r.getMetrics());
     const totalJobs = metrics.reduce((s, m) => s + m.totalJobsExecuted, 0);
     const avgSuccess =
-      metrics.length > 0
-        ? metrics.reduce((s, m) => s + m.successRate, 0) / metrics.length
-        : 1;
+      metrics.length > 0 ? metrics.reduce((s, m) => s + m.successRate, 0) / metrics.length : 1;
 
     return {
       totalRunners: this.runners.size,
-      availableRunners: Array.from(this.runners.values()).filter(
-        r => r.info.status === 'available',
-      ).length,
+      availableRunners: Array.from(this.runners.values()).filter(r => r.info.status === 'available')
+        .length,
       totalJobsExecuted: totalJobs,
       avgSuccessRate: avgSuccess,
     };

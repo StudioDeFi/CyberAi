@@ -54,7 +54,7 @@ export class SwarmPlanner {
       steps: cappedSteps,
       estimatedTotalDurationMs: cappedSteps.reduce(
         (sum, s) => sum + (s.estimatedDurationMs ?? 5000),
-        0,
+        0
       ),
       createdAt: new Date(),
     };
@@ -71,9 +71,9 @@ export class SwarmPlanner {
       input: { prompt: s.description },
       dependsOn: s.dependsOn
         ? s.dependsOn.map(dep => {
-          const idx = plan.steps.findIndex(ps => ps.name === dep);
-          return idx >= 0 ? `step-${idx}` : dep;
-        })
+            const idx = plan.steps.findIndex(ps => ps.name === dep);
+            return idx >= 0 ? `step-${idx}` : dep;
+          })
         : i > 0
           ? [`step-${i - 1}`]
           : undefined,

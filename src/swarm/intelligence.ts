@@ -144,7 +144,7 @@ export class SwarmIntelligenceEngine {
    */
   delegate(
     taskDescription: string,
-    availableAgents: Array<{ id: string; type: string; load: number }>,
+    availableAgents: Array<{ id: string; type: string; load: number }>
   ): string | null {
     if (availableAgents.length === 0) return null;
 
@@ -160,7 +160,7 @@ export class SwarmIntelligenceEngine {
 
   private synthesizeConclusion(
     topic: string,
-    finalArguments: Array<{ agentId: string; position: string; evidence: string }>,
+    finalArguments: Array<{ agentId: string; position: string; evidence: string }>
   ): string {
     if (finalArguments.length === 0) {
       return `No consensus reached on: ${topic}`;
@@ -201,10 +201,11 @@ export class SelfImprovementLoop {
   /**
    * Evaluate agent performance over recent history
    */
-  evaluate(agentId: string, windowSize = 20): { score: number; trend: 'improving' | 'stable' | 'declining' } {
-    const agentRecords = this.records
-      .filter(r => r.agentId === agentId)
-      .slice(-windowSize);
+  evaluate(
+    agentId: string,
+    windowSize = 20
+  ): { score: number; trend: 'improving' | 'stable' | 'declining' } {
+    const agentRecords = this.records.filter(r => r.agentId === agentId).slice(-windowSize);
 
     if (agentRecords.length === 0) {
       return { score: 0.5, trend: 'stable' };
@@ -242,8 +243,8 @@ export class SelfImprovementLoop {
 
     const suggestions: Record<string, string> = {
       'low-score': 'Switch to a higher-capability model for complex tasks',
-      'declining': 'Reduce task complexity; increase retry budget',
-      'slow': 'Enable parallel subtask execution',
+      declining: 'Reduce task complexity; increase retry budget',
+      slow: 'Enable parallel subtask execution',
     };
 
     const issue = score < 0.5 ? 'low-score' : trend === 'declining' ? 'declining' : 'slow';

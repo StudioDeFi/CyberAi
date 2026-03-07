@@ -5,7 +5,7 @@ metadata:
   labels:
     environment: production
     managed-by: god-swarm-ultra
-    version: "1.0.0"
+    version: '1.0.0'
 ---
 apiVersion: v1
 kind: Namespace

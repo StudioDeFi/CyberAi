@@ -66,7 +66,9 @@ describe('PlannerAgent', () => {
   });
 
   it('should execute and return a plan', async () => {
-    const context = makeContext(makeTask({ type: 'planner', input: { prompt: 'Build a TypeScript API' } }));
+    const context = makeContext(
+      makeTask({ type: 'planner', input: { prompt: 'Build a TypeScript API' } })
+    );
     const output = await agent.execute(context);
 
     expect(output.error).toBeUndefined();
@@ -116,7 +118,7 @@ describe('CodeGenAgent', () => {
           prompt: 'Create an API endpoint',
           context: { language: 'TypeScript' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -133,7 +135,7 @@ describe('CodeGenAgent', () => {
           prompt: 'Create a data processor',
           context: { language: 'Python' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -148,7 +150,7 @@ describe('CodeGenAgent', () => {
           prompt: 'Create a token contract',
           context: { language: 'Solidity' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -184,7 +186,7 @@ describe('SecurityAgent', () => {
           prompt: 'Audit this code',
           data: 'const result = eval(userInput);',
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -200,7 +202,7 @@ describe('SecurityAgent', () => {
           prompt: 'Audit',
           data: 'element.innerHTML = userInput;',
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -216,7 +218,7 @@ describe('SecurityAgent', () => {
           prompt: 'Audit',
           data: 'const password = "supersecret123";',
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -241,7 +243,7 @@ describe('SecurityAgent', () => {
           prompt: 'Audit',
           data: 'export const greeting = (name: string) => `Hello, ${name}!`;',
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -272,7 +274,7 @@ describe('DevOpsAgent', () => {
           prompt: 'Deploy to Kubernetes',
           context: { type: 'kubernetes', environment: 'production' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -288,7 +290,7 @@ describe('DevOpsAgent', () => {
           prompt: 'Deploy with Docker',
           context: { type: 'docker', environment: 'development' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -321,7 +323,7 @@ describe('ResearchAgent', () => {
       makeTask({
         type: 'research',
         input: { prompt: 'Latest developments in AI' },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -339,10 +341,10 @@ describe('ResearchAgent', () => {
 
   it('should respect depth parameter', async () => {
     const shallowContext = makeContext(
-      makeTask({ type: 'research', input: { prompt: 'Topic', context: { depth: 'shallow' } } }),
+      makeTask({ type: 'research', input: { prompt: 'Topic', context: { depth: 'shallow' } } })
     );
     const deepContext = makeContext(
-      makeTask({ type: 'research', input: { prompt: 'Topic', context: { depth: 'deep' } } }),
+      makeTask({ type: 'research', input: { prompt: 'Topic', context: { depth: 'deep' } } })
     );
 
     const shallowOutput = await agent.execute(shallowContext);
@@ -376,7 +378,7 @@ describe('TradingAgent', () => {
           prompt: 'Analyze Solana market',
           context: { network: 'solana', strategy: 'dca' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
@@ -423,12 +425,15 @@ describe('RepairAgent', () => {
           prompt: 'Fix build failure',
           context: { error: 'Cannot find module express', component: 'api' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);
     expect(output.error).toBeUndefined();
-    const result = output.result as { failure: { type: string }; repairPlan: { actions: unknown[] } };
+    const result = output.result as {
+      failure: { type: string };
+      repairPlan: { actions: unknown[] };
+    };
     expect(result.failure.type).toBe('dependency-issue');
     expect(result.repairPlan.actions.length).toBeGreaterThan(0);
   });
@@ -456,7 +461,7 @@ describe('RepairAgent', () => {
           prompt: 'Fix memory issue',
           context: { error: 'JavaScript heap out of memory', component: 'worker' },
         },
-      }),
+      })
     );
 
     const output = await agent.execute(context);

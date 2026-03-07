@@ -17,7 +17,7 @@ export class VectorMemoryStore {
     namespace: string,
     content: string,
     metadata: Record<string, unknown> = {},
-    ttlMs?: number,
+    ttlMs?: number
   ): Promise<MemoryEntry> {
     const entry: MemoryEntry = {
       id: randomUUID(),
@@ -44,11 +44,7 @@ export class VectorMemoryStore {
     return entry;
   }
 
-  async search(
-    namespace: string,
-    query: string,
-    topK = 5,
-  ): Promise<MemorySearchResult[]> {
+  async search(namespace: string, query: string, topK = 5): Promise<MemorySearchResult[]> {
     const queryTokens = this.tokenize(query);
     const results: MemorySearchResult[] = [];
 
@@ -70,9 +66,7 @@ export class VectorMemoryStore {
       }
     }
 
-    return results
-      .sort((a, b) => b.score - a.score)
-      .slice(0, topK);
+    return results.sort((a, b) => b.score - a.score).slice(0, topK);
   }
 
   async deleteByNamespace(namespace: string): Promise<number> {
@@ -138,7 +132,7 @@ export class VectorMemoryStore {
 export class AgentMemory {
   constructor(
     private store: VectorMemoryStore,
-    private namespace: string,
+    private namespace: string
   ) {}
 
   async remember(content: string, metadata: Record<string, unknown> = {}): Promise<MemoryEntry> {
@@ -193,20 +187,16 @@ export class EpisodicMemory {
   }
 
   getByAgent(agentId: string, limit = 50): Episode[] {
-    return this.episodes
-      .filter(e => e.agentId === agentId)
-      .slice(-limit);
+    return this.episodes.filter(e => e.agentId === agentId).slice(-limit);
   }
 
   getLessonsForTask(taskDescription: string, limit = 10): string[] {
     const keywords = taskDescription.toLowerCase().split(/\s+/);
     const relevant = this.episodes.filter(e =>
-      keywords.some(k => e.taskDescription.toLowerCase().includes(k)),
+      keywords.some(k => e.taskDescription.toLowerCase().includes(k))
     );
 
-    const lessons = relevant
-      .flatMap(e => e.lessons)
-      .filter((l, i, arr) => arr.indexOf(l) === i); // unique
+    const lessons = relevant.flatMap(e => e.lessons).filter((l, i, arr) => arr.indexOf(l) === i); // unique
 
     return lessons.slice(0, limit);
   }

@@ -48,7 +48,7 @@ export class PlannerAgent extends BaseAgent {
           summary: `Decomposed into ${plan.steps.length} tasks`,
           estimatedDurationMs: plan.estimatedTotalDurationMs,
         },
-        logs,
+        logs
       );
     } catch (err) {
       this.setStatus('error');

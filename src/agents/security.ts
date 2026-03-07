@@ -40,7 +40,8 @@ const VULNERABILITY_PATTERNS: Array<{
       severity: 'critical',
       title: 'Dangerous eval() usage',
       description: 'Use of eval() can lead to code injection attacks',
-      recommendation: 'Replace eval() with safer alternatives like JSON.parse() or Function constructors',
+      recommendation:
+        'Replace eval() with safer alternatives like JSON.parse() or Function constructors',
       cweId: 'CWE-95',
       cvssScore: 9.1,
     },
@@ -214,7 +215,7 @@ export class SecurityAgent extends BaseAgent {
         acc[f.severity] = (acc[f.severity] ?? 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     return `# Security Audit Report
@@ -226,8 +227,8 @@ Date: ${date}
 - **Risk Score**: ${result.riskScore}/100
 - **Total Findings**: ${result.findings.length}
 ${Object.entries(severityCounts)
-    .map(([sev, count]) => `- **${sev.charAt(0).toUpperCase() + sev.slice(1)}**: ${count}`)
-    .join('\n')}
+  .map(([sev, count]) => `- **${sev.charAt(0).toUpperCase() + sev.slice(1)}**: ${count}`)
+  .join('\n')}
 
 ## Findings
 
@@ -235,16 +236,16 @@ ${
   result.findings.length === 0
     ? '_No findings_'
     : result.findings
-      .map(
-        f => `### [${f.severity.toUpperCase()}] ${f.title}
+        .map(
+          f => `### [${f.severity.toUpperCase()}] ${f.title}
 ${f.cweId ? `**CWE**: ${f.cweId}  ` : ''}${f.cvssScore !== undefined ? `**CVSS**: ${f.cvssScore}` : ''}
 ${f.location ? `**Location**: ${f.location}` : ''}
 
 ${f.description}
 
-**Recommendation**: ${f.recommendation}`,
-      )
-      .join('\n\n---\n\n')
+**Recommendation**: ${f.recommendation}`
+        )
+        .join('\n\n---\n\n')
 }
 
 ## Recommendations

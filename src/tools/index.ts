@@ -11,7 +11,7 @@ export interface ToolResult<T = unknown> {
 }
 
 export type ToolExecutor<TArgs = Record<string, unknown>, TResult = unknown> = (
-  args: TArgs,
+  args: TArgs
 ) => Promise<ToolResult<TResult>>;
 
 export interface ToolDefinition {
@@ -36,10 +36,7 @@ export class ToolRegistry {
     return this.tools.get(name);
   }
 
-  async execute(
-    toolName: string,
-    args: Record<string, unknown>,
-  ): Promise<ToolResult> {
+  async execute(toolName: string, args: Record<string, unknown>): Promise<ToolResult> {
     const tool = this.tools.get(toolName);
     if (!tool) {
       return { success: false, error: `Tool "${toolName}" not found` };
@@ -55,9 +52,7 @@ export class ToolRegistry {
     }
   }
 
-  listByCategory(
-    category: ToolDefinition['category'],
-  ): ToolDefinition[] {
+  listByCategory(category: ToolDefinition['category']): ToolDefinition[] {
     return Array.from(this.tools.values()).filter(t => t.category === category);
   }
 
@@ -77,7 +72,7 @@ export const filesystemTools: ToolDefinition[] = [
     description: 'Read a file from the filesystem',
     category: 'filesystem',
     schema: { type: 'object', properties: { path: { type: 'string' } }, required: ['path'] },
-    executor: async (args) => {
+    executor: async args => {
       // In production: use actual fs.readFile
       const path = args['path'] as string;
       return { success: true, data: `[Content of ${path}]` };
@@ -92,7 +87,7 @@ export const filesystemTools: ToolDefinition[] = [
       properties: { path: { type: 'string' }, content: { type: 'string' } },
       required: ['path', 'content'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const path = args['path'] as string;
       return { success: true, data: { path, bytesWritten: String(args['content']).length } };
     },
@@ -102,7 +97,7 @@ export const filesystemTools: ToolDefinition[] = [
     description: 'List files in a directory',
     category: 'filesystem',
     schema: { type: 'object', properties: { path: { type: 'string' } }, required: ['path'] },
-    executor: async (args) => {
+    executor: async args => {
       const path = args['path'] as string;
       return { success: true, data: [`${path}/file1.ts`, `${path}/file2.ts`] };
     },
@@ -116,7 +111,7 @@ export const gitTools: ToolDefinition[] = [
     description: 'Get repository status',
     category: 'git',
     schema: { type: 'object', properties: { repoPath: { type: 'string' } } },
-    executor: async (_args) => {
+    executor: async _args => {
       return { success: true, data: { branch: 'main', changes: [], status: 'clean' } };
     },
   },
@@ -132,7 +127,7 @@ export const gitTools: ToolDefinition[] = [
       },
       required: ['message'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const message = args['message'] as string;
       return { success: true, data: { commitHash: 'abc123', message } };
     },
@@ -145,7 +140,7 @@ export const gitTools: ToolDefinition[] = [
       type: 'object',
       properties: { remote: { type: 'string' }, branch: { type: 'string' } },
     },
-    executor: async (args) => {
+    executor: async args => {
       return { success: true, data: { pushed: true, remote: args['remote'] ?? 'origin' } };
     },
   },
@@ -166,9 +161,12 @@ export const dockerTools: ToolDefinition[] = [
       },
       required: ['tag'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const tag = args['tag'] as string;
-      return { success: true, data: { imageId: `sha256:${Math.random().toString(36).slice(2, 14)}`, tag } };
+      return {
+        success: true,
+        data: { imageId: `sha256:${Math.random().toString(36).slice(2, 14)}`, tag },
+      };
     },
   },
   {
@@ -180,9 +178,12 @@ export const dockerTools: ToolDefinition[] = [
       properties: { image: { type: 'string' }, command: { type: 'string' } },
       required: ['image'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const image = args['image'] as string;
-      return { success: true, data: { containerId: `container-${Math.random().toString(36).slice(2, 10)}`, image } };
+      return {
+        success: true,
+        data: { containerId: `container-${Math.random().toString(36).slice(2, 10)}`, image },
+      };
     },
   },
 ];
@@ -198,7 +199,7 @@ export const webTools: ToolDefinition[] = [
       properties: { url: { type: 'string' }, method: { type: 'string' } },
       required: ['url'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const url = args['url'] as string;
       // In production: actual HTTP fetch
       return { success: true, data: { url, statusCode: 200, body: `[Content from ${url}]` } };
@@ -218,7 +219,7 @@ export const webTools: ToolDefinition[] = [
       },
       required: ['endpoint'],
     },
-    executor: async (args) => {
+    executor: async args => {
       const endpoint = args['endpoint'] as string;
       return { success: true, data: { endpoint, response: '[API response]' } };
     },

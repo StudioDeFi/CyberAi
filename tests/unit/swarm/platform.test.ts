@@ -140,7 +140,7 @@ describe('SwarmRunner', () => {
   });
 
   it('should use registered handler', async () => {
-    runner.registerHandler('planner', async (task) => ({
+    runner.registerHandler('planner', async task => ({
       result: { custom: true, taskId: task.id },
       logs: ['Custom handler'],
       metrics: { startTime: new Date(), endTime: new Date() },
@@ -171,8 +171,16 @@ describe('SwarmRunner', () => {
   it('should reject tasks when at capacity', async () => {
     const capacityRunner = new SwarmRunner('capacity-runner', []);
     // Set to max capacity by overriding internal capacity
-    (capacityRunner as unknown as { runner: { capacity: { maxConcurrentJobs: number; currentJobs: number } } }).runner.capacity.maxConcurrentJobs = 1;
-    (capacityRunner as unknown as { runner: { capacity: { maxConcurrentJobs: number; currentJobs: number } } }).runner.capacity.currentJobs = 1;
+    (
+      capacityRunner as unknown as {
+        runner: { capacity: { maxConcurrentJobs: number; currentJobs: number } };
+      }
+    ).runner.capacity.maxConcurrentJobs = 1;
+    (
+      capacityRunner as unknown as {
+        runner: { capacity: { maxConcurrentJobs: number; currentJobs: number } };
+      }
+    ).runner.capacity.currentJobs = 1;
 
     await expect(capacityRunner.execute(makeTask())).rejects.toThrow(/capacity/i);
   });
@@ -364,10 +372,26 @@ describe('EpisodicMemory', () => {
 
   it('should calculate success rate', () => {
     for (let i = 0; i < 8; i++) {
-      episodic.record({ agentId: 'a1', taskId: `t${i}`, taskDescription: 'Task', actions: [], outcome: 'success', qualityScore: 1, lessons: [] });
+      episodic.record({
+        agentId: 'a1',
+        taskId: `t${i}`,
+        taskDescription: 'Task',
+        actions: [],
+        outcome: 'success',
+        qualityScore: 1,
+        lessons: [],
+      });
     }
     for (let i = 8; i < 10; i++) {
-      episodic.record({ agentId: 'a1', taskId: `t${i}`, taskDescription: 'Task', actions: [], outcome: 'failure', qualityScore: 0, lessons: [] });
+      episodic.record({
+        agentId: 'a1',
+        taskId: `t${i}`,
+        taskDescription: 'Task',
+        actions: [],
+        outcome: 'failure',
+        qualityScore: 0,
+        lessons: [],
+      });
     }
 
     const rate = episodic.getSuccessRate('a1');
@@ -451,11 +475,14 @@ describe('Marketplace', () => {
 
   it('should search agents by keyword', () => {
     const results = marketplace.searchAgents('TypeScript');
-    expect(results.every(a =>
-      a.name.toLowerCase().includes('typescript') ||
-      a.description.toLowerCase().includes('typescript') ||
-      a.tags.includes('typescript')
-    )).toBe(true);
+    expect(
+      results.every(
+        a =>
+          a.name.toLowerCase().includes('typescript') ||
+          a.description.toLowerCase().includes('typescript') ||
+          a.tags.includes('typescript')
+      )
+    ).toBe(true);
   });
 
   it('should get featured agents', () => {
@@ -479,7 +506,7 @@ describe('Marketplace', () => {
   });
 
   it('should record and summarize usage', () => {
-    marketplace.recordUsage('user-3', 'workflow-run', 5, 0.50);
+    marketplace.recordUsage('user-3', 'workflow-run', 5, 0.5);
     marketplace.recordUsage('user-3', 'runner-min', 30, 0.03);
 
     const summary = marketplace.getUsageSummary('user-3');

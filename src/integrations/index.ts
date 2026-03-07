@@ -97,7 +97,7 @@ export class GitHubIntegration extends BaseIntegration {
     title: string,
     headBranch: string,
     baseBranch: string,
-    _body?: string,
+    _body?: string
   ): Promise<IntegrationResult<GitHubPR>> {
     return this.result({
       number: Math.floor(Math.random() * 1000),
@@ -114,7 +114,7 @@ export class GitHubIntegration extends BaseIntegration {
     _repo: string,
     _workflowId: string,
     _ref: string,
-    _inputs?: Record<string, string>,
+    _inputs?: Record<string, string>
   ): Promise<IntegrationResult<{ runId: number }>> {
     return this.result({ runId: Math.floor(Math.random() * 100000) });
   }
@@ -140,10 +140,7 @@ export class DockerHubIntegration extends BaseIntegration {
     });
   }
 
-  async pushImage(
-    repository: string,
-    tag: string,
-  ): Promise<IntegrationResult<DockerImage>> {
+  async pushImage(repository: string, tag: string): Promise<IntegrationResult<DockerImage>> {
     return this.result({
       repository,
       tag,
@@ -181,7 +178,7 @@ export class AWSIntegration extends BaseIntegration {
   async deployECS(
     clusterName: string,
     serviceName: string,
-    _taskDefinition: string,
+    _taskDefinition: string
   ): Promise<IntegrationResult<AWSResource>> {
     return this.result({
       resourceType: 'ecs-service',
@@ -195,7 +192,7 @@ export class AWSIntegration extends BaseIntegration {
   async deployLambda(
     functionName: string,
     _zipBuffer: Buffer | string,
-    _runtime: string,
+    _runtime: string
   ): Promise<IntegrationResult<AWSResource>> {
     return this.result({
       resourceType: 'lambda-function',
@@ -230,7 +227,9 @@ export class SolanaIntegration extends BaseIntegration {
     });
   }
 
-  async getBalance(_publicKey: string): Promise<IntegrationResult<{ sol: number; lamports: number }>> {
+  async getBalance(
+    _publicKey: string
+  ): Promise<IntegrationResult<{ sol: number; lamports: number }>> {
     // In production: call Solana JSON-RPC
     const lamports = Math.floor(Math.random() * 1000000000);
     return this.result({ sol: lamports / 1e9, lamports });
@@ -250,7 +249,7 @@ export class SolanaIntegration extends BaseIntegration {
 
   async sendTransaction(
     to: string,
-    amount: number,
+    amount: number
   ): Promise<IntegrationResult<BlockchainTransaction>> {
     return this.result({
       hash: `sig-${Math.random().toString(36).slice(2, 22)}`,
@@ -282,7 +281,7 @@ export class EthereumIntegration extends BaseIntegration {
     contractAddress: string,
     abi: unknown[],
     method: string,
-    args?: unknown[],
+    args?: unknown[]
   ): Promise<IntegrationResult<unknown>> {
     return this.result({ contractAddress, method, args, result: null });
   }

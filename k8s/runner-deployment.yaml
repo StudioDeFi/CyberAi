@@ -16,7 +16,7 @@ spec:
     metadata:
       labels:
         app: god-swarm-runner
-        version: "1.0.0"
+        version: '1.0.0'
     spec:
       serviceAccountName: god-swarm-runner
       containers:
@@ -28,7 +28,7 @@ spec:
             - name: CONTROL_PLANE_URL
               value: http://god-swarm-api.cyberai-production.svc.cluster.local
             - name: RUNNER_MAX_CONCURRENT_JOBS
-              value: "5"
+              value: '5'
           resources:
             requests:
               cpu: 500m

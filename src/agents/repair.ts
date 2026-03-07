@@ -30,7 +30,13 @@ export interface SystemFailure {
 
 export interface RepairAction {
   id: string;
-  type: 'fix-code' | 'restart-service' | 'rollback' | 'update-config' | 'clear-cache' | 'reinstall-deps';
+  type:
+    | 'fix-code'
+    | 'restart-service'
+    | 'rollback'
+    | 'update-config'
+    | 'clear-cache'
+    | 'reinstall-deps';
   description: string;
   command?: string;
   patch?: string;
@@ -194,10 +200,7 @@ export class RepairAgent extends BaseAgent {
     let estimatedDowntimeMin = 5;
 
     for (const { pattern, failureType, repairType, fix, command } of ERROR_PATTERNS) {
-      if (
-        failure.type === failureType ||
-        pattern.test(failure.errorMessage)
-      ) {
+      if (failure.type === failureType || pattern.test(failure.errorMessage)) {
         actions.push({
           id: `action-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
           type: repairType,
@@ -267,11 +270,14 @@ ${plan.rootCause}
 
 ### Actions
 ${plan.actions
-    .map(
-      (a, i) => `${i + 1}. **${a.description}** _(${a.risk} risk, ${(a.confidence * 100).toFixed(0)}% confidence)_
-   ${a.command ? `\`\`\`bash\n   ${a.command}\n   \`\`\`` : ''}`,
-    )
-    .join('\n\n')}
+  .map(
+    (
+      a,
+      i
+    ) => `${i + 1}. **${a.description}** _(${a.risk} risk, ${(a.confidence * 100).toFixed(0)}% confidence)_
+   ${a.command ? `\`\`\`bash\n   ${a.command}\n   \`\`\`` : ''}`
+  )
+  .join('\n\n')}
 
 ## Rollback Strategy
 ${plan.rollbackStrategy}

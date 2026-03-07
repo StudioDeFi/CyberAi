@@ -70,7 +70,10 @@ export interface UsageRecord {
 
 // ─── Pricing Plans ────────────────────────────────────────────────────────────
 
-export const SUBSCRIPTION_PLANS: Record<Subscription['plan'], Omit<Subscription, 'id' | 'userId' | 'startDate' | 'renewalDate' | 'status'>> = {
+export const SUBSCRIPTION_PLANS: Record<
+  Subscription['plan'],
+  Omit<Subscription, 'id' | 'userId' | 'startDate' | 'renewalDate' | 'status'>
+> = {
   starter: {
     plan: 'starter',
     monthlyUsd: 29,
@@ -117,7 +120,9 @@ export class Marketplace {
 
   // ─── Agent Catalog ──────────────────────────────────────────────────────────
 
-  publishAgent(agent: Omit<MarketplaceAgent, 'id' | 'publishedAt' | 'updatedAt'>): MarketplaceAgent {
+  publishAgent(
+    agent: Omit<MarketplaceAgent, 'id' | 'publishedAt' | 'updatedAt'>
+  ): MarketplaceAgent {
     const full: MarketplaceAgent = {
       ...agent,
       id: randomUUID(),
@@ -195,7 +200,7 @@ export class Marketplace {
   getSubscription(userId: string): Subscription | null {
     return (
       Array.from(this.subscriptions.values()).find(
-        s => s.userId === userId && s.status === 'active',
+        s => s.userId === userId && s.status === 'active'
       ) ?? null
     );
   }
@@ -205,7 +210,7 @@ export class Marketplace {
     resourceType: UsageRecord['resourceType'],
     quantity: number,
     costUsd: number,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
   ): UsageRecord {
     const record: UsageRecord = {
       id: randomUUID(),
@@ -220,12 +225,15 @@ export class Marketplace {
     return record;
   }
 
-  getUsageSummary(userId: string, fromDate?: Date): {
+  getUsageSummary(
+    userId: string,
+    fromDate?: Date
+  ): {
     totalCostUsd: number;
     breakdown: Record<string, { quantity: number; costUsd: number }>;
   } {
     const records = this.usageRecords.filter(
-      r => r.userId === userId && (!fromDate || r.timestamp >= fromDate),
+      r => r.userId === userId && (!fromDate || r.timestamp >= fromDate)
     );
 
     const breakdown: Record<string, { quantity: number; costUsd: number }> = {};
@@ -282,7 +290,7 @@ export class Marketplace {
         rating: 4.5,
         downloads: 3200,
         pricingModel: 'per-use' as const,
-        priceUsd: 0.10,
+        priceUsd: 0.1,
         capabilities: ['market-analysis', 'strategy-execution', 'risk-management'],
       },
     ];
@@ -295,13 +303,16 @@ export class Marketplace {
     const defaultTemplates = [
       {
         name: 'CI/CD Security Pipeline',
-        description:
-          'Full security pipeline: code scan → vulnerability fix → test → deploy',
+        description: 'Full security pipeline: code scan → vulnerability fix → test → deploy',
         category: 'devops',
         tags: ['cicd', 'security', 'automation'],
         author: 'GOD-SWARM',
         steps: [
-          { name: 'Security Scan', agentType: 'security', description: 'Scan code for vulnerabilities' },
+          {
+            name: 'Security Scan',
+            agentType: 'security',
+            description: 'Scan code for vulnerabilities',
+          },
           { name: 'Auto Repair', agentType: 'repair', description: 'Fix detected issues' },
           { name: 'Test Suite', agentType: 'code-gen', description: 'Run test suite' },
           { name: 'Deploy', agentType: 'devops', description: 'Deploy to production' },

@@ -25,17 +25,16 @@ export type ToolFunction = (args: Record<string, unknown>) => Promise<unknown>;
 export interface MemoryInterface {
   store(key: string, value: unknown): Promise<void>;
   retrieve(key: string): Promise<unknown>;
-  search(query: string, topK?: number): Promise<Array<{ key: string; value: unknown; score: number }>>;
+  search(
+    query: string,
+    topK?: number
+  ): Promise<Array<{ key: string; value: unknown; score: number }>>;
 }
 
 export abstract class BaseAgent {
   protected swarmAgent: SwarmAgent;
 
-  constructor(
-    type: AgentType,
-    name: string,
-    capabilities: Partial<AgentCapabilities> = {},
-  ) {
+  constructor(type: AgentType, name: string, capabilities: Partial<AgentCapabilities> = {}) {
     this.swarmAgent = {
       identity: {
         id: randomUUID(),
