@@ -130,6 +130,21 @@ export class SwarmEngine {
       throw new Error(`Workflow ${workflowId} not found`);
     }
 
+    // Enforce maximum concurrent workflows if configured
+    const maxConcurrent = (this as any).config?.maxConcurrentWorkflows;
+    if (typeof maxConcurrent === 'number' && maxConcurrent > 0) {
+      let runningCount = 0;
+      for (const run of this.workflowRuns.values()) {
+        if (run.status === 'running') {
+          runningCount += 1;
+          if (runningCount >= maxConcurrent) {
+            throw new Error(
+              `Maximum concurrent workflows limit (${maxConcurrent}) reached`
+            );
+          }
+        }
+      }
+    }
     const taskGraph = this.taskGraphGenerator.generate(workflowId, workflow.steps);
 
     const run: WorkflowRun = {
