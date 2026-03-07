@@ -138,7 +138,9 @@ for await (const event of client.streamWorkflowEvents(result.runId)) {
 ### Docker Compose
 
 ```bash
-docker-compose up -d
+# Start the full swarm stack using the "swarm" profile
+# Ensure required env vars (e.g. DATABASE_URL, REDIS_URL, OPENAI_API_KEY) are set or provided via an .env file
+docker-compose --profile swarm up -d
 ```
 
 ### Kubernetes
