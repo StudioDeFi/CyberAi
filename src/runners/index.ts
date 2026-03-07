@@ -160,11 +160,21 @@ export class SwarmRunner {
     timeoutMs: number,
     telemetry: JobTelemetry,
   ): Promise<T> {
-    const timeout = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`Job timed out after ${timeoutMs}ms`)), timeoutMs),
-    );
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const timeout = new Promise<never>((_, reject) => {
+      timeoutId = setTimeout(
+        () => reject(new Error(`Job timed out after ${timeoutMs}ms`)),
+        timeoutMs,
+      );
+    });
     telemetry.logs.push(`[Runner] Executing with ${timeoutMs}ms timeout`);
-    return Promise.race([promise, timeout]);
+    try {
+      return await Promise.race([promise, timeout]);
+    } finally {
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+    }
   }
 
   private async defaultExecute(task: Task, telemetry: JobTelemetry): Promise<TaskOutput> {
